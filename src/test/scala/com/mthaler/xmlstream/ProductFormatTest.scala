@@ -3,6 +3,7 @@ package com.mthaler.xmlstream
 import ProductFormat._
 import org.junit.Assert._
 import org.junit.Test
+import scala.reflect.classTag
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)
@@ -18,7 +19,7 @@ class ProductFormatTest {
 
   @Test
   def testExtractFieldNames(): Unit = {
-    val fieldNames = ProductFormat.extractFieldNames(classManifest[TestClass])
+    val fieldNames = ProductFormat.extractFieldNames(classTag[TestClass])
     assertEquals(Seq("field1", "field2", "field3"), fieldNames.toSeq)
   }
 
