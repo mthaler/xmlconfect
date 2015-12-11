@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mthaler/xmlstream.png)](https://travis-ci.org/mthaler/xmlstream)
+
 _xmlstream_ is a type class based library to read / write XML
 
 It sports the following features:
