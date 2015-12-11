@@ -1,0 +1,34 @@
+package com.mthaler.xmlstream
+
+import ProductFormat._
+import scala.xml.{Null, MetaData, Node}
+import scala.reflect.{ClassTag, classTag}
+
+object ProductFormatInstances {
+
+[# // Case classes with 1 parameters
+  def xmlFormat1[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T): XmlElemFormat[T] = {
+    val Array([#p1#]) = extractFieldNames(classTag[T])
+    xmlFormat(construct, [#p1#])
+  }
+  def xmlFormat[[#P1 :XF#], T <: Product](construct: ([#P1#]) => T, [#fieldName1: String#]): XmlElemFormat[T] = new XmlElemFormat[T]{
+    def write(p: T, name: String = "") = {
+      val fields = new collection.mutable.ListBuffer[Either[Node, MetaData]]
+      [#fields ++= productElement##2Field[P1](fieldName1, p, 0)#
+      ]
+      elem(if (name.isEmpty) p.productPrefix else name, metaData(fields), children(fields))
+    }
+    def read(value: XML, name: String = "") = {
+      value match {
+        case Left(node)  =>
+          [#val p1V = fromField[P1](node, fieldName1)#
+          ]
+          construct([#p1V#])
+        case Right(metaData) =>
+          throw new UnsupportedOperationException("not supported")
+      }
+    }
+  }#
+
+]
+}
