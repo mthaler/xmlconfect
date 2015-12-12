@@ -16,8 +16,6 @@ licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.
 
 scalacOptions += "-deprecation"
 
-mainClass in (Compile, run) := Some("xmlstream.Main")
-
 libraryDependencies += "junit" % "junit" % "4.12" % "test"
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
