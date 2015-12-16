@@ -1,91 +1,152 @@
 package com.mthaler.xmlstream
 
 import org.scalatest.FunSuite
+import scala.xml.{Null, Text, Attribute}
 import BasicElemFormats._
 
 class BasicElemFormatsTest extends FunSuite {
 
   test("boolean") {
-    val result0 = BooleanXmlElemFormat.read((Left(<value>true</value>)), "value")
-    assert(true == result0)
-    val result1 = BooleanXmlElemFormat.write(true, "value")
-    assert(Left(<value>true</value>) == result1)
+    assertResult(true) {
+      BooleanXmlElemFormat.read(Left(<value>true</value>), "value")
+    }
+    assertResult(Left(<value>true</value>)) {
+      BooleanXmlElemFormat.write(true, "value")
+    }
+    intercept[DeserializationException] {
+      BooleanXmlElemFormat.read(Right(Attribute("value", Text("true"), Null)))
+    }
   }
 
   test("byte") {
-    val result0 = ByteXmlElemFormat.read((Left(<value>42</value>)), "value")
-    assert(42.toByte == result0)
-    val result1 = ByteXmlElemFormat.write(42.toByte, "value")
-    assert(Left(<value>42</value>) == result1)
+    assertResult(42.toByte) {
+      ByteXmlElemFormat.read(Left(<value>42</value>), "value")
+    }
+    assertResult(Left(<value>42</value>)) {
+      ByteXmlElemFormat.write(42.toByte, "value")
+    }
+    intercept[DeserializationException] {
+      ByteXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
+    }
   }
 
   test("short") {
-    val result0 = ShortXmlElemFormat.read((Left(<value>42</value>)), "value")
-    assert(42.toShort == result0)
-    val result1 = ShortXmlElemFormat.write(42.toShort, "value")
-    assert(Left(<value>42</value>) == result1)
+    assertResult(42.toShort) {
+      ShortXmlElemFormat.read(Left(<value>42</value>), "value")
+    }
+    assertResult(Left(<value>42</value>)) {
+      ShortXmlElemFormat.write(42.toShort, "value")
+    }
+    intercept[DeserializationException] {
+      ShortXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
+    }
   }
 
   test("int") {
-    val result0 = IntXmlElemFormat.read((Left(<value>42</value>)), "value")
-    assert(42.toInt == result0)
-    val result1 = IntXmlElemFormat.write(42, "value")
-    assert(Left(<value>42</value>) == result1)
+    assertResult(42) {
+      IntXmlElemFormat.read(Left(<value>42</value>), "value")
+    }
+    assertResult(Left(<value>42</value>)) {
+      IntXmlElemFormat.write(42, "value")
+    }
+    intercept[DeserializationException] {
+      IntXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
+    }
   }
 
   test("long") {
-    val result0 = LongXmlElemFormat.read((Left(<value>42</value>)), "value")
-    assert(42l == result0)
-    val result1 = LongXmlElemFormat.write(42l, "value")
-    assert(Left(<value>42</value>) == result1)
+    assertResult(42.toLong) {
+      LongXmlElemFormat.read(Left(<value>42</value>), "value")
+    }
+    assertResult(Left(<value>42</value>)) {
+      LongXmlElemFormat.write(42.toLong, "value")
+    }
+    intercept[DeserializationException] {
+      LongXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
+    }
   }
 
   test("float") {
-    val result0 = FloatXmlElemFormat.read((Left(<value>3.14</value>)), "value")
-    assert(3.14f == result0)
-    val result1 = FloatXmlElemFormat.write(3.14f, "value")
-    assert(Left(<value>3.14</value>) == result1)
+    assertResult(3.14f) {
+      FloatXmlElemFormat.read((Left(<value>3.14</value>)), "value")
+    }
+    assertResult(Left(<value>3.14</value>)) {
+      FloatXmlElemFormat.write(3.14f, "value")
+    }
+    intercept[DeserializationException] {
+      FloatXmlElemFormat.read(Right(Attribute("value", Text("3.14"), Null)))
+    }
   }
 
   test("double") {
-    val result0 = DoubleXmlElemFormat.read((Left(<value>3.14</value>)), "value")
-    assert(3.14 == result0)
-    val result1 = DoubleXmlElemFormat.write(3.14, "value")
-    assert(Left(<value>3.14</value>) == result1)
+    assertResult(3.14) {
+      DoubleXmlElemFormat.read((Left(<value>3.14</value>)), "value")
+    }
+    assertResult(Left(<value>3.14</value>)) {
+      DoubleXmlElemFormat.write(3.14, "value")
+    }
+    intercept[DeserializationException] {
+      DoubleXmlElemFormat.read(Right(Attribute("value", Text("3.14"), Null)))
+    }
   }
 
   test("string") {
-    val result0 = StringXmlElemFormat.read((Left(<value>42</value>)), "value")
-    assert("42" == result0)
-    val result1 = StringXmlElemFormat.write("42", "value")
-    assert(Left(<value>42</value>) == result1)
+    assertResult("42") {
+      StringXmlElemFormat.read(Left(<value>42</value>), "value")
+    }
+    assertResult(Left(<value>42</value>)) {
+      StringXmlElemFormat.write("42", "value")
+    }
+    intercept[DeserializationException] {
+      StringXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
+    }
   }
 
   test("char") {
-    val result0 = CharXmlElemFormat.read((Left(<value>c</value>)), "value")
-    assert('c' == result0)
-    val result1 = CharXmlElemFormat.write('c', "value")
-    assert(Left(<value>c</value>) == result1)
+    assertResult('c') {
+      CharXmlElemFormat.read(Left(<value>c</value>), "value")
+    }
+    assertResult(Left(<value>c</value>)) {
+      CharXmlElemFormat.write('c', "value")
+    }
+    intercept[DeserializationException] {
+      CharXmlElemFormat.read(Right(Attribute("value", Text("c"), Null)))
+    }
   }
 
   test("symbol") {
-    val result0 = SymbolXmlElemFormat.read((Left(<value>symbol</value>)), "value")
-    assert('symbol == result0)
-    val result1 = SymbolXmlElemFormat.write('symbol, "value")
-    assert(Left(<value>symbol</value>) == result1)
+    assertResult('symbol) {
+      SymbolXmlElemFormat.read(Left(<value>symbol</value>), "value")
+    }
+    assertResult(Left(<value>symbol</value>)) {
+      SymbolXmlElemFormat.write('symbol, "value")
+    }
+    intercept[DeserializationException] {
+      SymbolXmlElemFormat.read(Right(Attribute("value", Text("symbol"), Null)))
+    }
   }
 
-  test("bigint") {
-    val result0 = BigIntXmlElemFormat.read((Left(<value>1234567891234567891234567890</value>)), "value")
-    assert(BigInt("1234567891234567891234567890") == result0)
-    val result1 = BigIntXmlElemFormat.write(BigInt("1234567891234567891234567890"), "value")
-    assert(Left(<value>1234567891234567891234567890</value>) == result1)
+  test("bigInt") {
+    assertResult(BigInt("1234567891234567891234567890")) {
+      BigIntXmlElemFormat.read(Left(<value>1234567891234567891234567890</value>), "value")
+    }
+    assertResult(Left(<value>1234567891234567891234567890</value>)) {
+      BigIntXmlElemFormat.write(BigInt("1234567891234567891234567890"), "value")
+    }
+    intercept[DeserializationException] {
+      BigIntXmlElemFormat.read(Right(Attribute("value", Text("1234567891234567891234567890"), Null)))
+    }
   }
 
-  test("bigdecimal") {
-    val result0 = BigDecimalXmlElemFormat.read((Left(<value>1234567891234567891234567890.123456789</value>)), "value")
-    assert(BigDecimal("1234567891234567891234567890.123456789") == result0)
-    val result1 = BigDecimalXmlElemFormat.write(BigDecimal("1234567891234567891234567890.123456789"), "value")
-    assert(Left(<value>1234567891234567891234567890.123456789</value>) == result1)
+  test("bigDecimal") {
+    assertResult(BigDecimal("1234567891234567891234567890.123456789")) {
+      BigDecimalXmlElemFormat.read(Left(<value>1234567891234567891234567890.123456789</value>), "value")
+    }
+    assertResult(Left(<value>1234567891234567891234567890.123456789</value>)) {
+      BigDecimalXmlElemFormat.write(BigDecimal("1234567891234567891234567890.123456789"), "value")
+    }
+    intercept[DeserializationException] {
+      BigDecimalXmlElemFormat.read(Right(Attribute("value", Text("1234567891234567891234567890.123456789"), Null)))
+    }
   }
 }
