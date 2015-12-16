@@ -24,5 +24,7 @@ libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
 
+libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
+
 // generate boilerplate
 Boilerplate.settings
