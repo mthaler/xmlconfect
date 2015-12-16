@@ -10,7 +10,7 @@ class CollectionFormatsTest extends FunSuite {
 
   import CollectionFormatsTest._
 
-  test("intlist") {
+  test("intList") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
     val lf = CollectionFormats.listFormat[Count]
@@ -25,7 +25,7 @@ class CollectionFormatsTest extends FunSuite {
     assert(Nil == result3)
   }
 
-  test("intarray") {
+  test("intArray") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
     val lf = CollectionFormats.arrayFormat[Count]
@@ -40,7 +40,7 @@ class CollectionFormatsTest extends FunSuite {
     assert(Nil == result3.toSeq)
   }
 
-  test("intvector") {
+  test("intVector") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
     val lf = CollectionFormats.vectorFormat[Count]

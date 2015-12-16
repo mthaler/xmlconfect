@@ -6,7 +6,7 @@ import scala.xml.{Attribute, Null, Text}
 
 class StandardFormatsTest extends FunSuite {
 
-  test("intoption") {
+  test("intOption") {
     import BasicAttrFormats._
     val f = StandardFormats.optionFormat[Int]
     val result0 = f.read(Right(Attribute("value", Text("42"), Null)), "value")
@@ -19,7 +19,7 @@ class StandardFormatsTest extends FunSuite {
     assert(Right(Null) == result3)
   }
 
-  test("stringoption") {
+  test("stringOption") {
     import BasicAttrFormats._
     val f = StandardFormats.optionFormat[String]
     val result0 = f.read(Right(Attribute("value", Text("42"), Null)), "value")
