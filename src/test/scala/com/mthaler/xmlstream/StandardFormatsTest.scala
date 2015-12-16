@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 
 import scala.xml.{Attribute, Null, Text}
 
-class StandardFormatsTest2 extends FunSuite {
+class StandardFormatsTest extends FunSuite {
 
   test("intoption") {
     import BasicAttrFormats._
