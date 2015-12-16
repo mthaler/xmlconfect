@@ -110,6 +110,9 @@ class BasicElemFormatsTest extends FunSuite {
       CharXmlElemFormat.write('c', "value")
     }
     intercept[DeserializationException] {
+      CharXmlElemFormat.read(Left(<value>ccccc</value>))
+    }
+    intercept[DeserializationException] {
       CharXmlElemFormat.read(Right(Attribute("value", Text("c"), Null)))
     }
   }

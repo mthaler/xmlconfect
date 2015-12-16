@@ -111,6 +111,9 @@ class BasicAttrFormatsTest extends FunSuite {
       CharXmlAttrFormat.write('c', "value")
     }
     intercept[DeserializationException] {
+      CharXmlAttrFormat.read(Right(Attribute("value", Text("ccccc"), Null)), "value")
+    }
+    intercept[DeserializationException] {
       CharXmlAttrFormat.read(Left(<value>c</value>))
     }
   }
