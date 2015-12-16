@@ -8,7 +8,7 @@ object StandardFormats {
 
   implicit def optionFormat[T](implicit format: XmlFormat[T]) = new XmlFormat[Option[T]] {
     def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => throw new UnsupportedOperationException("not supported")
+      case Left(node) => deserializationError("Reading nodes not supported")
       case Right(metaData) => metaData.get(name) match {
         case Some(result) => Some(format.read(xml, name))
         case None => None

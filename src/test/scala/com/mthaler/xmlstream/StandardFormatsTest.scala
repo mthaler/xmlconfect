@@ -9,26 +9,37 @@ class StandardFormatsTest extends FunSuite {
   test("intOption") {
     import BasicAttrFormats._
     val f = StandardFormats.optionFormat[Int]
-    val result0 = f.read(Right(Attribute("value", Text("42"), Null)), "value")
-    assert(Some(42) == result0)
-    val result1 = f.write(Some(42), "value")
-    assert(Right(Attribute("value", Text("42"), Null)) == result1)
-    val result2 = f.read(Right(Null), "value")
-    assert(None == result2)
-    val result3 = f.write(None, "value")
-    assert(Right(Null) == result3)
+    assertResult(Some(42)) {
+      f.read(Right(Attribute("value", Text("42"), Null)), "value")
+    }
+    assertResult(Right(Attribute("value", Text("42"), Null))) {
+      f.write(Some(42), "value")
+    }
+    assertResult(None) {
+      f.read(Right(Null), "value")
+    }
+    assertResult(Right(Null)) {
+      f.write(None, "value")
+    }
+    intercept[DeserializationException] {
+      f.read(Left(<value>42</value>), "value")
+    }
   }
 
   test("stringOption") {
     import BasicAttrFormats._
     val f = StandardFormats.optionFormat[String]
-    val result0 = f.read(Right(Attribute("value", Text("42"), Null)), "value")
-    assert(Some("42") == result0)
-    val result1 = f.write(Some("42"), "value")
-    assert(Right(Attribute("value", Text("42"), Null)) == result1)
-    val result2 = f.read(Right(Null), "value")
-    assert(None == result2)
-    val result3 = f.write(None, "value")
-    assert(Right(Null) == result3)
+    assertResult(Some("42")) {
+      f.read(Right(Attribute("value", Text("42"), Null)), "value")
+    }
+    assertResult(Right(Attribute("value", Text("42"), Null))) {
+      f.write(Some("42"), "value")
+    }
+    assertResult(Right(Null)) {
+      f.write(None, "value")
+    }
+    intercept[DeserializationException] {
+      f.read(Left(<value>42</value>), "value")
+    }
   }
 }
