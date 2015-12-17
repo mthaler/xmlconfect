@@ -4,6 +4,8 @@ import org.scalatest.FunSuite
 
 object CollectionFormatsTest {
   case class Count(count: Int)
+  case class Person(name: String = "Albert Einstein", age: Int = 42)
+  case class Persons(persons: List[Person])
 }
 
 class CollectionFormatsTest extends FunSuite {
@@ -53,5 +55,19 @@ class CollectionFormatsTest extends FunSuite {
     assert(Left(<Counts/>) == result2)
     val result3 = lf.read(result2)
     assert(Nil == result3)
+  }
+
+  test("personList") {
+    import BasicAttrFormats._
+    implicit val pf = ProductFormat.xmlFormat2(Person)
+    implicit val lf = CollectionFormats.listFormat[Person]
+    val psf = ProductFormat.xmlFormat(Persons, "Persons")
+    val persons = Persons(List(Person("Richard Feynman", 56)))
+    assertResult(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>)) {
+      psf.write(persons)
+    }
+    assertResult(Persons(List(Person("Richard Feynman",56)))) {
+      psf.read(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>))
+    }
   }
 }
