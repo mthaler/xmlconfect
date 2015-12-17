@@ -124,7 +124,7 @@ object ProductFormat {
     def read(value: XML, name: String = "") = {
       value match {
         case Left(node)  =>
-          val defaultArgs = Try { Classes.defaultArgs(classTag[T].runtimeClass) } getOrElse(Nil)
+          val defaultArgs = DefaultArgsCache.get(classTag[T].runtimeClass)
           if (defaultArgs.size == 1) {
             val p1V = fromField[P1](node, fieldName1, Some(defaultArgs(0).asInstanceOf[P1]))
             construct(p1V)
@@ -153,7 +153,7 @@ object ProductFormat {
     def read(value: XML, name: String = "") = {
       value match {
         case Left(node) =>
-          val defaultArgs = Try { Classes.defaultArgs(classTag[T].runtimeClass) } getOrElse(Nil)
+          val defaultArgs = DefaultArgsCache.get(classTag[T].runtimeClass)
           if (defaultArgs.size == 2) {
             val p1V = fromField[P1](node, fieldName1, Some(defaultArgs(0).asInstanceOf[P1]))
             val p2V = fromField[P2](node, fieldName2, Some(defaultArgs(1).asInstanceOf[P2]))
