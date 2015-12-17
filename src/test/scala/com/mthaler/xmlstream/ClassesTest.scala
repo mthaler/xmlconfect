@@ -16,4 +16,9 @@ class ClassesTest extends FunSuite {
     val p2 = Classes.newDefault(classOf[Person])
     assert(p2 == Person())
   }
+
+  test("defaultArgs") {
+    val defaultArgs = Classes.defaultArgs(classOf[Person])
+    assert(List("Albert Einstein", 42) == defaultArgs)
+  }
 }
