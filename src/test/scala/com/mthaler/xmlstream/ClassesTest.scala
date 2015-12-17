@@ -13,5 +13,7 @@ class ClassesTest extends FunSuite {
   test("newDefault") {
     val p = Classes.newDefault[Person]
     assert(p == Person())
+    val p2 = Classes.newDefault(classOf[Person])
+    assert(p2 == Person())
   }
 }
