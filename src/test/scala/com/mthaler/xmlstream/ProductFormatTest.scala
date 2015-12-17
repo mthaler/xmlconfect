@@ -11,6 +11,7 @@ object ProductFormatTest {
   case class Product2(field1: String, field2: Int)
   case class Product1WithProduct1(product1: Product1)
   case class Product1WithOption(option: Option[Int])
+  case class Person(name: String = "Albert Einstein", age: Int = 42)
 }
 
 class ProductFormatTest extends FunSuite {
@@ -72,5 +73,19 @@ class ProductFormatTest extends FunSuite {
     assert(Left(<Product2 myfield1="test" myfield2="42"/>) == result0)
     val result1 = f.read(result0)
     assert(p == result1)
+  }
+
+  test("missingFields") {
+    import com.mthaler.xmlstream.BasicAttrFormats._
+    val f = xmlFormat2(Person)
+    assertResult(Left(<Person name="Richard Feynman" age="56"/>)) {
+      f.write(Person("Richard Feynman", 56))
+    }
+    assertResult(Person("Richard Feynman", 56)) {
+      f.read(Left(<Person name="Richard Feynman" age="56"/>))
+    }
+    assertResult(Person("Richard Feynman", 42)) {
+      f.read(Left(<Person name="Richard Feynman"/>))
+    }
   }
 }

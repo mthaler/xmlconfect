@@ -2,6 +2,7 @@ package com.mthaler.xmlstream
 
 import scala.annotation.tailrec
 import scala.reflect.{ClassTag, classTag}
+import scala.util.Try
 import scala.util.control.NonFatal
 import scala.xml.{MetaData, Node, Null}
 
@@ -85,13 +86,21 @@ object ProductFormat {
     }
   }
 
-  def fromField[T](node: Node, fieldName: String)(implicit reader: XmlReader[T]) = reader match {
+  def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case root: XmlElemReader[T] =>
       val elem = Left((node \ fieldName).head)
       reader.read(elem, fieldName)
     case _ =>
-      val attr = Right(node.attributes)
-      reader.read(attr, fieldName)
+      try {
+        val attr = Right(node.attributes)
+        reader.read(attr, fieldName)
+      } catch {
+        case ex: Exception =>
+          defaultValue match {
+            case Some(v) => v
+            case None => deserializationError("Could not read attribute " + fieldName, ex)
+          }
+      }
   }
 
   def metaData(fields: Seq[XML]): MetaData = {
@@ -105,7 +114,7 @@ object ProductFormat {
     val Array(p1) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1)
   }
-  def xmlFormat[P1 :XF, T <: Product](construct: (P1) => T, fieldName1: String): XmlElemFormat[T] = new XmlElemFormat[T]{
+  def xmlFormat[P1 :XF, T <: Product : ClassTag](construct: (P1) => T, fieldName1: String): XmlElemFormat[T] = new XmlElemFormat[T]{
     def write(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[Either[Node, MetaData]]
       fields.sizeHint(1 * 2)
@@ -115,8 +124,14 @@ object ProductFormat {
     def read(value: XML, name: String = "") = {
       value match {
         case Left(node)  =>
-          val p1V = fromField[P1](node, fieldName1)
-          construct(p1V)
+          val defaultArgs = Try { Classes.defaultArgs(classTag[T].runtimeClass) } getOrElse(Nil)
+          if (defaultArgs.size == 1) {
+            val p1V = fromField[P1](node, fieldName1, Some(defaultArgs(0).asInstanceOf[P1]))
+            construct(p1V)
+          } else {
+            val p1V = fromField[P1](node, fieldName1)
+            construct(p1V)
+          }
         case Right(metaData) =>
           throw new UnsupportedOperationException("not supported")
       }
@@ -127,7 +142,7 @@ object ProductFormat {
     val Array(p1, p2) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1, p2)
   }
-  def xmlFormat[P1 :XF, P2 :XF, T <: Product](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): XmlElemFormat[T] = new XmlElemFormat[T]{
+  def xmlFormat[P1 :XF, P2 :XF, T <: Product : ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): XmlElemFormat[T] = new XmlElemFormat[T]{
     def write(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[Either[Node, MetaData]]
       fields.sizeHint(2 * 3)
@@ -138,9 +153,16 @@ object ProductFormat {
     def read(value: XML, name: String = "") = {
       value match {
         case Left(node) =>
-          val p1V = fromField[P1](node, fieldName1)
-          val p2V = fromField[P2](node, fieldName2)
-          construct(p1V, p2V)
+          val defaultArgs = Try { Classes.defaultArgs(classTag[T].runtimeClass) } getOrElse(Nil)
+          if (defaultArgs.size == 2) {
+            val p1V = fromField[P1](node, fieldName1, Some(defaultArgs(0).asInstanceOf[P1]))
+            val p2V = fromField[P2](node, fieldName2, Some(defaultArgs(1).asInstanceOf[P2]))
+            construct(p1V, p2V)
+          } else {
+            val p1V = fromField[P1](node, fieldName1)
+            val p2V = fromField[P2](node, fieldName2)
+            construct(p1V, p2V)
+          }
         case Right(metaData) => throw new UnsupportedOperationException("not supported")
       }
     }
