@@ -2,6 +2,7 @@ package com.mthaler.xmlconfect
 
 import scala.reflect.ClassTag
 import scala.xml.{ Elem, Null }
+import scala.language.postfixOps
 
 object CollectionFormats {
 
