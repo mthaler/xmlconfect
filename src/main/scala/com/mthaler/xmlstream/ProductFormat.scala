@@ -1,15 +1,15 @@
 package com.mthaler.xmlstream
 
 import scala.annotation.tailrec
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{ ClassTag, classTag }
 import scala.util.Try
 import scala.util.control.NonFatal
-import scala.xml.{MetaData, Node, Null}
+import scala.xml.{ MetaData, Node, Null }
 
 /**
-  * Provides the helpers for constructing custom XmlFormat implementations for types implementing the Product trait
-  * (especially case classes)
-  */
+ * Provides the helpers for constructing custom XmlFormat implementations for types implementing the Product trait
+ * (especially case classes)
+ */
 object ProductFormat {
 
   type XF[T] = XmlFormat[T] // simple alias for reduced verbosity
@@ -20,10 +20,11 @@ object ProductFormat {
       // copy methods have the form copy$default$N(), we need to sort them in order, but must account for the fact
       // that lexical sorting of ...8(), ...9(), ...10() is not correct, so we extract N and sort by N.toInt
       val copyDefaultMethods = clazz.getMethods.filter(_.getName.startsWith("copy$default$")).sortBy(
-        _.getName.drop("copy$default$".length).takeWhile(_ != '(').toInt)
+        _.getName.drop("copy$default$".length).takeWhile(_ != '(').toInt
+      )
       val fields = clazz.getDeclaredFields.filterNot { f =>
         import java.lang.reflect.Modifier._
-        (f.getModifiers & (TRANSIENT | STATIC | 0x1000 /* SYNTHETIC*/)) > 0
+        (f.getModifiers & (TRANSIENT | STATIC | 0x1000 /* SYNTHETIC*/ )) > 0
       }
       if (copyDefaultMethods.length != fields.length)
         sys.error("Case class " + clazz.getName + " declares additional fields")
@@ -37,7 +38,7 @@ object ProductFormat {
   }
 
   private def unmangle(name: String) = {
-    import java.lang.{StringBuilder => JStringBuilder}
+    import java.lang.{ StringBuilder => JStringBuilder }
     @tailrec def rec(ix: Int, builder: JStringBuilder): String = {
       val rem = name.length - ix
       if (rem > 0) {
@@ -81,8 +82,7 @@ object ProductFormat {
     rec(0, null)
   }
 
-  def productElement2Field[T](fieldName: String, p: Product, ix: Int, rest: List[XML] = Nil)
-                                       (implicit writer: XmlWriter[T]): List[XML] = {
+  def productElement2Field[T](fieldName: String, p: Product, ix: Int, rest: List[XML] = Nil)(implicit writer: XmlWriter[T]): List[XML] = {
     val value = p.productElement(ix).asInstanceOf[T]
     writer match {
       //case _: OptionFormat[_] if (value == None) => rest
@@ -114,11 +114,11 @@ object ProductFormat {
 
   def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node }
 
-  def xmlFormat1[P1 :XF, T <: Product : ClassTag](construct: (P1) => T): XmlElemFormat[T] = {
+  def xmlFormat1[P1: XF, T <: Product: ClassTag](construct: (P1) => T): XmlElemFormat[T] = {
     val Array(p1) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1)
   }
-  def xmlFormat[P1 :XF, T <: Product : ClassTag](construct: (P1) => T, fieldName1: String): XmlElemFormat[T] = new XmlElemFormat[T]{
+  def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): XmlElemFormat[T] = new XmlElemFormat[T] {
     def write(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[Either[Node, MetaData]]
       fields.sizeHint(1 * 2)
@@ -127,7 +127,7 @@ object ProductFormat {
     }
     def read(value: XML, name: String = "") = {
       value match {
-        case Left(node)  =>
+        case Left(node) =>
           val defaultArgs = DefaultArgsCache.get(classTag[T].runtimeClass)
           if (defaultArgs.size == 1) {
             val p1V = fromField[P1](node, fieldName1, Some(defaultArgs(0).asInstanceOf[P1]))
@@ -142,11 +142,11 @@ object ProductFormat {
     }
   }
 
-  def xmlFormat2[P1 :XF, P2 :XF, T <: Product : ClassTag](construct: (P1, P2) => T): XmlElemFormat[T] = {
+  def xmlFormat2[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T): XmlElemFormat[T] = {
     val Array(p1, p2) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1, p2)
   }
-  def xmlFormat[P1 :XF, P2 :XF, T <: Product : ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): XmlElemFormat[T] = new XmlElemFormat[T]{
+  def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): XmlElemFormat[T] = new XmlElemFormat[T] {
     def write(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[Either[Node, MetaData]]
       fields.sizeHint(2 * 3)

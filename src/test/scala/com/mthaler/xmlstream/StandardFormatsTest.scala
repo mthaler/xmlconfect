@@ -2,7 +2,7 @@ package com.mthaler.xmlstream
 
 import org.scalatest.FunSuite
 
-import scala.xml.{Attribute, Null, Text}
+import scala.xml.{ Attribute, Null, Text }
 
 class StandardFormatsTest extends FunSuite {
 

@@ -2,7 +2,7 @@ package com.mthaler.xmlstream
 
 import BasicAttrFormats._
 import org.scalatest.FunSuite
-import scala.xml.{Null, Text, Attribute}
+import scala.xml.{ Null, Text, Attribute }
 
 class BasicAttrFormatsTest extends FunSuite {
 
@@ -17,7 +17,6 @@ class BasicAttrFormatsTest extends FunSuite {
       BooleanXmlAttrFormat.read(Left(<value>true</value>))
     }
   }
-
 
   test("byte") {
     assertResult(42.toByte) {

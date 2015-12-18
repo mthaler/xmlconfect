@@ -66,7 +66,7 @@ class CollectionFormatsTest extends FunSuite {
     assertResult(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>)) {
       psf.write(persons)
     }
-    assertResult(Persons(List(Person("Richard Feynman",56)))) {
+    assertResult(Persons(List(Person("Richard Feynman", 56)))) {
       psf.read(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>))
     }
   }

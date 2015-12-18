@@ -1,7 +1,7 @@
 package com.mthaler.xmlstream
 
 import org.scalatest.FunSuite
-import scala.xml.{Null, Text, Attribute}
+import scala.xml.{ Null, Text, Attribute }
 import BasicElemFormats._
 
 class BasicElemFormatsTest extends FunSuite {

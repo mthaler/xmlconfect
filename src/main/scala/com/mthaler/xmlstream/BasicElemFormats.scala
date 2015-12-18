@@ -1,10 +1,10 @@
 package com.mthaler.xmlstream
 
-import scala.xml.{Null, Text}
+import scala.xml.{ Null, Text }
 
 /**
-  * Provides the XmlElemFormats for the most important Scala types.
-  */
+ * Provides the XmlElemFormats for the most important Scala types.
+ */
 object BasicElemFormats {
 
   implicit object BooleanXmlElemFormat extends XmlElemFormat[Boolean] {

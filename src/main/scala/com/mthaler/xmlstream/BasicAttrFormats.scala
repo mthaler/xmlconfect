@@ -1,8 +1,8 @@
 package com.mthaler.xmlstream
 
 /**
-  * Provides the XmlAttrFormats for the most important Scala types.
-  */
+ * Provides the XmlAttrFormats for the most important Scala types.
+ */
 object BasicAttrFormats {
 
   implicit object BooleanXmlAttrFormat extends XmlAttrFormat[Boolean] {

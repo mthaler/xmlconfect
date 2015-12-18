@@ -1,7 +1,7 @@
 package com.mthaler.xmlstream
 
 import scala.annotation.implicitNotFound
-import scala.xml.{MetaData, Node}
+import scala.xml.{ MetaData, Node }
 
 /**
  * Provides the XML deserialization for type T.

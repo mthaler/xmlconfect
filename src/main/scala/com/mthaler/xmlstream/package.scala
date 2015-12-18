@@ -1,6 +1,6 @@
 package com.mthaler
 
-import scala.xml.{Text, Attribute, MetaData, Node, Null, Elem, TopScope}
+import scala.xml.{ Text, Attribute, MetaData, Node, Null, Elem, TopScope }
 
 package object xmlstream {
 
