@@ -42,4 +42,15 @@ class StandardFormatsTest extends FunSuite {
       f.read(Left(<value>42</value>), "value")
     }
   }
+
+  test("tuple2") {
+    import BasicAttrFormats._
+    val f = StandardFormats.tuple2Format[String, Int]
+    assertResult(("test", 42)) {
+      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null))))
+    }
+    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)))) {
+      f.write(("test", 42), "value")
+    }
+  }
 }

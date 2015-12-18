@@ -25,4 +25,17 @@ object StandardFormats {
       case None => Right(Null)
     }
   }
+
+  implicit def tuple2Format[A, B](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B]) = new XmlAttrFormat[(A, B)] {
+
+    def read(value: XML, name: String = "") = value match {
+      case Left(node) => deserializationError("Reading nodes not supported")
+      case md @ Right(metaData) =>
+        val a = format1.read(md, "_1")
+        val b = format2.read(md, "_2")
+        (a, b)
+    }
+
+    def write(t: (A, B), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get))
+  }
 }
