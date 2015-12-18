@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/mthaler/xmlstream.png)](https://travis-ci.org/mthaler/xmlstream)
-[![codecov.io](http://codecov.io/github/mthaler/xmlstream/coverage.svg?branch=master)](http://codecov.io/github/mthaler/xmlstream?branch=master)
+[![Build Status](https://travis-ci.org/mthaler/xmlconfect.png)](https://travis-ci.org/mthaler/xmlconfect)
+[![codecov.io](http://codecov.io/github/mthaler/xmlconfect/coverage.svg?branch=master)](http://codecov.io/github/mthaler/xmlconfect?branch=master)
 
-_xmlstream_ is a type class based library to read / write XML
+_xmlconfect_ is a type class based library to read / write XML
 
 It sports the following features:
 
