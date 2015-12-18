@@ -52,5 +52,8 @@ class StandardFormatsTest extends FunSuite {
     assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)))) {
       f.write(("test", 42), "value")
     }
+    intercept[DeserializationException] {
+      f.read(Left(<test/>))
+    }
   }
 }
