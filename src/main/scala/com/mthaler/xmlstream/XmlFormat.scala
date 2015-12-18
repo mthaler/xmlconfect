@@ -6,6 +6,7 @@ import scala.xml.{MetaData, Node}
 /**
  * Provides the XML deserialization for type T.
  */
+
 @implicitNotFound(msg = "Cannot find XmlReader or XmlFormat type class for ${T}")
 trait XmlReader[T] {
   def read(xml: Either[Node, MetaData], name: String = ""): T

@@ -5,6 +5,9 @@ import scala.xml.Null
 
 object CollectionFormats {
 
+  /**
+    * Supplies the XmlElemFormat for lists.
+    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
     def read(xml: XML, name: String = "") = xml match {
       case Left(node) => node.child.map(n => format.read(Left(n))).toList
@@ -16,6 +19,9 @@ object CollectionFormats {
     }
   }
 
+  /**
+    * Supplies the XmlElemFormat for arrays.
+    */
   implicit def arrayFormat[T : ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
     def read(xml: XML, name: String = "") = xml match {
       case Left(node) => node.child.map(n => format.read(Left(n))).toArray
@@ -37,7 +43,7 @@ object CollectionFormats {
   implicit def vectorFormat[T : XmlElemFormat]        = viaSeq[Vector[T], T](seq => Vector(seq :_*))
 
   /**
-   * A JsonFormat construction helper that creates a JsonFormat for an Iterable type I from a builder function
+   * An XmlElemFormat construction helper that creates a XmlElemFormat for an iterable type I from a builder function
    * List => I.
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]) : XmlElemFormat[I] = new XmlElemFormat[I] {

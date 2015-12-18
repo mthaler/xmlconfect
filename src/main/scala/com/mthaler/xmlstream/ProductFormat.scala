@@ -6,6 +6,10 @@ import scala.util.Try
 import scala.util.control.NonFatal
 import scala.xml.{MetaData, Node, Null}
 
+/**
+  * Provides the helpers for constructing custom XmlFormat implementations for types implementing the Product trait
+  * (especially case classes)
+  */
 object ProductFormat {
 
   type XF[T] = XmlFormat[T] // simple alias for reduced verbosity
