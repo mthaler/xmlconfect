@@ -1,7 +1,7 @@
 package com.mthaler.xmlstream
 
 import scala.reflect.ClassTag
-import scala.xml.Null
+import scala.xml.{ Elem, Null }
 
 object CollectionFormats {
 
@@ -10,7 +10,7 @@ object CollectionFormats {
    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
     def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => node.child.map(n => format.read(Left(n))).toList
+      case Left(node) => node.child.collect { case elem: Elem => format.read(Left(elem)) } toList
       case Right(metaData) => deserializationError("Reading lists from attributes not supported")
     }
     def write(value: List[T], name: String = "") = {
@@ -24,7 +24,7 @@ object CollectionFormats {
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
     def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => node.child.map(n => format.read(Left(n))).toArray
+      case Left(node) => node.child.collect { case elem: Elem => format.read(Left(elem)) } toArray
       case Right(metaData) => deserializationError("Reading arrays from attributes not supported")
     }
     def write(value: Array[T], name: String = "") = {
@@ -48,7 +48,7 @@ object CollectionFormats {
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = new XmlElemFormat[I] {
     def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => f(node.child.map(n => format.read(Left(n))).toVector)
+      case Left(node) => f(node.child.collect { case elem: Elem => format.read(Left(elem)) } toVector)
       case Right(metaData) => deserializationError("Reading lists from attributes not supported")
     }
     def write(iterable: I, name: String = "") = {
