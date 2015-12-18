@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 /**
  * Provides the XmlAttrFormats for the most important Scala types.

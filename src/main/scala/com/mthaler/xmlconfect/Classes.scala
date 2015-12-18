@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 object Classes {
 

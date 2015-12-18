@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import org.scalatest.FunSuite
 import scala.xml.{ Null, Text, Attribute }

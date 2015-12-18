@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import scala.annotation.tailrec
 import scala.reflect.{ ClassTag, classTag }

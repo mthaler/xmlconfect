@@ -2,7 +2,7 @@ package com.mthaler
 
 import scala.xml.{ Text, Attribute, MetaData, Node, Null, Elem, TopScope }
 
-package object xmlstream {
+package object xmlconfect {
 
   type XML = Either[Node, MetaData]
 
@@ -16,7 +16,7 @@ package object xmlstream {
   def xmlWriter[T](implicit writer: XmlWriter[T]) = writer
 }
 
-package xmlstream {
+package xmlconfect {
   case class DeserializationException(msg: String, cause: Throwable = null, fieldNames: List[String] = Nil) extends RuntimeException(msg, cause)
 
   class SerializationException(msg: String) extends RuntimeException(msg)

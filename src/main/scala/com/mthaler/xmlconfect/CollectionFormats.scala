@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import scala.reflect.ClassTag
 import scala.xml.{ Elem, Null }

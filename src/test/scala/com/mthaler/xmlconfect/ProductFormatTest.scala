@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import org.scalatest.FunSuite
 
@@ -41,7 +41,7 @@ class ProductFormatTest extends FunSuite {
   }
 
   test("xmlFormat2") {
-    import com.mthaler.xmlstream.BasicAttrFormats._
+    import com.mthaler.xmlconfect.BasicAttrFormats._
     val f = xmlFormat2(Product2)
     val p = Product2("test", 42)
     val result0 = f.write(p)
@@ -51,8 +51,8 @@ class ProductFormatTest extends FunSuite {
   }
 
   test("xmlFormat1WithOptions") {
-    import com.mthaler.xmlstream.BasicAttrFormats._
-    import com.mthaler.xmlstream.StandardFormats._
+    import com.mthaler.xmlconfect.BasicAttrFormats._
+    import com.mthaler.xmlconfect.StandardFormats._
     implicit val f = xmlFormat1(Product1WithOption)
     val p = Product1WithOption(Some(42))
     val result0 = f.write(p)
@@ -67,7 +67,7 @@ class ProductFormatTest extends FunSuite {
   }
 
   test("xmlFormat2CustomFieldNames") {
-    import com.mthaler.xmlstream.BasicAttrFormats._
+    import com.mthaler.xmlconfect.BasicAttrFormats._
     val f = xmlFormat(Product2.apply, "myfield1", "myfield2")
     val p = Product2("test", 42)
     val result0 = f.write(p)
@@ -77,7 +77,7 @@ class ProductFormatTest extends FunSuite {
   }
 
   test("missingFields") {
-    import com.mthaler.xmlstream.BasicAttrFormats._
+    import com.mthaler.xmlconfect.BasicAttrFormats._
     val f = xmlFormat2(Person)
     assertResult(Left(<Person name="Richard Feynman" age="56"/>)) {
       f.write(Person("Richard Feynman", 56))

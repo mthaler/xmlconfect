@@ -1,6 +1,6 @@
 import ReleaseTransformations._
 
-lazy val xmlStreamSettings = Seq(
+lazy val xmlConfectSettings = Seq(
   organization := "com.mthaler",
   scalaVersion := "2.11.7",
   libraryDependencies ++= Seq(
@@ -14,7 +14,7 @@ lazy val xmlStreamSettings = Seq(
     "-feature"
   ),
   licenses += ("Apache License, Version 2.0", url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
-  homepage := Some(url("http://github.com/mthaler/xmlstream")),
+  homepage := Some(url("http://github.com/mthaler/xmlconfect")),
 
   // release stuff
   credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
@@ -31,8 +31,8 @@ lazy val xmlStreamSettings = Seq(
   },
   pomExtra :=
     <scm>
-      <url>git@github.com:mthaler/xmlstream.git</url>
-      <connection>scm:git:git@github.com:mthaler/xmlstream.git</connection>
+      <url>git@github.com:mthaler/xmlconfect.git</url>
+      <connection>scm:git:git@github.com:mthaler/xmlconfect.git</connection>
     </scm>
     <developers>
       <developer>
@@ -64,10 +64,10 @@ lazy val noPublish = Seq(
 lazy val root = project.in(file("."))
   .aggregate(core)
   .settings(name := "root")
-  .settings(xmlStreamSettings: _*)
+  .settings(xmlConfectSettings: _*)
   .settings(noPublish: _*)
 
 lazy val core = project.in(file("."))
-  .settings(name := "xmlstream")
-  .settings(xmlStreamSettings: _*)
+  .settings(name := "xmlconfect")
+  .settings(xmlConfectSettings: _*)
   .settings(Boilerplate.settings: _*) // generate boilerplate

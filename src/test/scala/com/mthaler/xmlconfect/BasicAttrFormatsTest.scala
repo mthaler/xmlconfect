@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import BasicAttrFormats._
 import org.scalatest.FunSuite

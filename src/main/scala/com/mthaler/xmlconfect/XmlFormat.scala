@@ -1,4 +1,4 @@
-package com.mthaler.xmlstream
+package com.mthaler.xmlconfect
 
 import scala.annotation.implicitNotFound
 import scala.xml.{ MetaData, Node }
