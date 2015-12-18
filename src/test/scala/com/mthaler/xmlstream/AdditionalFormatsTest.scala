@@ -1,7 +1,6 @@
 package com.mthaler.xmlstream
 
 import org.scalatest.FunSuite
-import scala.xml.{ MetaData, Node }
 import ProductFormat._
 
 object AdditionalFormatsTest {
