@@ -4,6 +4,7 @@ import org.scalatest.FunSuite
 
 import ProductFormat._
 import scala.reflect.classTag
+import scala.xml.{Null, MetaData, Node}
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)
@@ -12,6 +13,8 @@ object ProductFormatTest {
   case class Product1WithProduct1(product1: Product1)
   case class Product1WithOption(option: Option[Int])
   case class Person(name: String = "Albert Einstein", age: Int = 42)
+  case class Friends(friends: List[String])
+  case class Person2(name: String, friends: Friends)
 }
 
 class ProductFormatTest extends FunSuite {
@@ -86,6 +89,25 @@ class ProductFormatTest extends FunSuite {
     }
     assertResult(Person("Richard Feynman", 42)) {
       f.read(Left(<Person name="Richard Feynman"/>))
+    }
+  }
+
+  test("ignoreFields") {
+    import BasicAttrFormats._
+    val p = Person2("Albert Einstein", Friends(List("Richard Feynman", "Werner Heisenberg", "Paul Dirac")))
+    implicit val friendsFormat = new XmlAttrFormat[Friends] {
+
+      override def read(xml: Either[Node, MetaData], name: String): Friends = Friends(Nil)
+
+      override def write(obj: Friends, name: String): Either[Node, MetaData] = Right(scala.xml.Null)
+    }
+    implicit val pf = xmlFormat2(Person2)
+
+    assertResult(Left(<Person2 name="Albert Einstein"/>)) {
+      pf.write(p)
+    }
+    assertResult(Person2("Albert Einstein",Friends(Nil))) {
+      pf.read(Left(<Person2 name="Albert Einstein"/>))
     }
   }
 }
