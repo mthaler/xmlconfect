@@ -61,13 +61,13 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     implicit val pf = ProductFormat.xmlFormat2(Person)
     implicit val lf = CollectionFormats.listFormat[Person]
-    val psf = ProductFormat.xmlFormat(Persons, "Persons")
+    implicit val psf = ProductFormat.xmlFormat(Persons, "Persons")
     val persons = Persons(List(Person("Richard Feynman", 56)))
     assertResult(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>)) {
       psf.write(persons)
     }
     assertResult(Persons(List(Person("Richard Feynman", 56)))) {
-      psf.read(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>))
+      <Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>.convertTo[Persons]
     }
   }
 }
