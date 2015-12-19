@@ -12,49 +12,61 @@ class CollectionFormatsTest extends FunSuite {
 
   import CollectionFormatsTest._
 
-  test("intList") {
+  test("countList") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    val lf = CollectionFormats.listFormat[Count]
+    implicit val lf = CollectionFormats.listFormat[Count]
     val l = List(Count(5), Count(8), Count(42))
-    val result0 = lf.write(l, "Counts")
-    assert(Left(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) == result0)
-    val result1 = lf.read(result0)
-    assert(l == result1)
-    val result2 = lf.write(Nil, "Counts")
-    assert(Left(<Counts/>) == result2)
-    val result3 = lf.read(result2)
-    assert(Nil == result3)
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[List[Count]]
+    }
+    assertResult(<Counts/>) {
+      List.empty[Count].toNode("Counts")
+    }
+    assertResult(Nil) {
+      <Counts/>.convertTo[List[Count]]
+    }
   }
 
-  test("intArray") {
+  test("countArray") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    val lf = CollectionFormats.arrayFormat[Count]
+    implicit val lf = CollectionFormats.arrayFormat[Count]
     val l = Array(Count(5), Count(8), Count(42))
-    val result0 = lf.write(l, "Counts")
-    assert(Left(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) == result0)
-    val result1 = lf.read(result0)
-    assert(l.toSeq == result1.toSeq)
-    val result2 = lf.write(Array.empty, "Counts")
-    assert(Left(<Counts/>) == result2)
-    val result3 = lf.read(result2)
-    assert(Nil == result3.toSeq)
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Array[Count]]
+    }
+    assertResult(<Counts/>) {
+      Array.empty[Count].toNode("Counts")
+    }
+    assertResult(Array.empty[Count]) {
+      <Counts/>.convertTo[Array[Count]]
+    }
   }
 
-  test("intVector") {
+  test("countVector") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    val lf = CollectionFormats.vectorFormat[Count]
+    implicit val lf = CollectionFormats.vectorFormat[Count]
     val l = Vector(Count(5), Count(8), Count(42))
-    val result0 = lf.write(l, "Counts")
-    assert(Left(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) == result0)
-    val result1 = lf.read(result0)
-    assert(l == result1)
-    val result2 = lf.write(Vector.empty, "Counts")
-    assert(Left(<Counts/>) == result2)
-    val result3 = lf.read(result2)
-    assert(Nil == result3)
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Vector[Count]]
+    }
+    assertResult(<Counts/>) {
+      Vector.empty[Count].toNode("Counts")
+    }
+    assertResult(Vector.empty[Count]) {
+      <Counts/>.convertTo[Vector[Count]]
+    }
   }
 
   test("personList") {
