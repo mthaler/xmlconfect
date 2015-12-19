@@ -63,8 +63,8 @@ class CollectionFormatsTest extends FunSuite {
     implicit val lf = CollectionFormats.listFormat[Person]
     implicit val psf = ProductFormat.xmlFormat(Persons, "Persons")
     val persons = Persons(List(Person("Richard Feynman", 56)))
-    assertResult(Left(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>)) {
-      psf.write(persons)
+    assertResult(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>) {
+      persons.toNode
     }
     assertResult(Persons(List(Person("Richard Feynman", 56)))) {
       <Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>.convertTo[Persons]

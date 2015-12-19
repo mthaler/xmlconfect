@@ -17,6 +17,7 @@ package object xmlconfect {
   def xmlWriter[T](implicit writer: XmlWriter[T]) = writer
 
   implicit def pimpElem(elem: Elem) = new PimpedElem(elem)
+  implicit def pimpAny[T](any: T) = new PimpedAny[T](any)
 }
 
 package xmlconfect {
@@ -24,10 +25,16 @@ package xmlconfect {
 
   class SerializationException(msg: String) extends RuntimeException(msg)
 
-  private[xmlconfect] class PimpedElem(val elem: Elem) {
+  private[xmlconfect] class PimpedElem(elem: Elem) {
 
     def convertTo[T](implicit reader: XmlElemReader[T]): T = {
       reader.read(Left(elem))
     }
+  }
+
+  private[xmlconfect] class PimpedAny[T](any: T) {
+    def toNode(implicit writer: XmlElemWriter[T]): Node = writer.write(any).left.get
+
+    def toNode(name: String)(implicit writer: XmlElemWriter[T]): Node = writer.write(any, name).left.get
   }
 }

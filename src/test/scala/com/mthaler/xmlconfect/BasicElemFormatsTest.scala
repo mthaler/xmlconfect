@@ -10,8 +10,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(true) {
       (<value>true</value>).convertTo[Boolean]
     }
-    assertResult(Left(<value>true</value>)) {
-      BooleanXmlElemFormat.write(true, "value")
+    assertResult(<value>true</value>) {
+      true.toNode("value")
     }
     intercept[DeserializationException] {
       BooleanXmlElemFormat.read(Right(Attribute("value", Text("true"), Null)))
@@ -22,8 +22,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(42.toByte) {
       <value>42</value>.convertTo[Byte]
     }
-    assertResult(Left(<value>42</value>)) {
-      ByteXmlElemFormat.write(42.toByte, "value")
+    assertResult(<value>42</value>) {
+      42.toByte.toNode("value")
     }
     intercept[DeserializationException] {
       ByteXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
@@ -34,8 +34,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(42.toShort) {
       <value>42</value>.convertTo[Short]
     }
-    assertResult(Left(<value>42</value>)) {
-      ShortXmlElemFormat.write(42.toShort, "value")
+    assertResult(<value>42</value>) {
+      42.toShort.toNode("value")
     }
     intercept[DeserializationException] {
       ShortXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
@@ -46,8 +46,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(42) {
       <value>42</value>.convertTo[Int]
     }
-    assertResult(Left(<value>42</value>)) {
-      IntXmlElemFormat.write(42, "value")
+    assertResult(<value>42</value>) {
+      42.toNode("value")
     }
     intercept[DeserializationException] {
       IntXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
@@ -58,8 +58,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(42.toLong) {
       <value>42</value>.convertTo[Long]
     }
-    assertResult(Left(<value>42</value>)) {
-      LongXmlElemFormat.write(42.toLong, "value")
+    assertResult(<value>42</value>) {
+      42.toLong.toNode("value")
     }
     intercept[DeserializationException] {
       LongXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
@@ -70,8 +70,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(3.14f) {
       <value>3.14</value>.convertTo[Float]
     }
-    assertResult(Left(<value>3.14</value>)) {
-      FloatXmlElemFormat.write(3.14f, "value")
+    assertResult(<value>3.14</value>) {
+      3.14f.toNode("value")
     }
     intercept[DeserializationException] {
       FloatXmlElemFormat.read(Right(Attribute("value", Text("3.14"), Null)))
@@ -82,8 +82,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(3.14) {
       <value>3.14</value>.convertTo[Double]
     }
-    assertResult(Left(<value>3.14</value>)) {
-      DoubleXmlElemFormat.write(3.14, "value")
+    assertResult(<value>3.14</value>) {
+      3.14.toNode("value")
     }
     intercept[DeserializationException] {
       DoubleXmlElemFormat.read(Right(Attribute("value", Text("3.14"), Null)))
@@ -94,8 +94,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult("42") {
       <value>42</value>.convertTo[String]
     }
-    assertResult(Left(<value>42</value>)) {
-      StringXmlElemFormat.write("42", "value")
+    assertResult(<value>42</value>) {
+      "42".toNode("value")
     }
     intercept[DeserializationException] {
       StringXmlElemFormat.read(Right(Attribute("value", Text("42"), Null)))
@@ -106,8 +106,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult('c') {
       <value>c</value>.convertTo[Char]
     }
-    assertResult(Left(<value>c</value>)) {
-      CharXmlElemFormat.write('c', "value")
+    assertResult(<value>c</value>) {
+      'c'.toNode("value")
     }
     intercept[DeserializationException] {
       CharXmlElemFormat.read(Left(<value>ccccc</value>))
@@ -121,8 +121,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult('symbol) {
       <value>symbol</value>.convertTo[Symbol]
     }
-    assertResult(Left(<value>symbol</value>)) {
-      SymbolXmlElemFormat.write('symbol, "value")
+    assertResult(<value>symbol</value>) {
+      'symbol.toNode("value")
     }
     intercept[DeserializationException] {
       SymbolXmlElemFormat.read(Right(Attribute("value", Text("symbol"), Null)))
@@ -133,8 +133,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(BigInt("1234567891234567891234567890")) {
       <value>1234567891234567891234567890</value>.convertTo[BigInt]
     }
-    assertResult(Left(<value>1234567891234567891234567890</value>)) {
-      BigIntXmlElemFormat.write(BigInt("1234567891234567891234567890"), "value")
+    assertResult(<value>1234567891234567891234567890</value>) {
+      BigInt("1234567891234567891234567890").toNode("value")
     }
     intercept[DeserializationException] {
       BigIntXmlElemFormat.read(Right(Attribute("value", Text("1234567891234567891234567890"), Null)))
@@ -145,8 +145,8 @@ class BasicElemFormatsTest extends FunSuite {
     assertResult(BigDecimal("1234567891234567891234567890.123456789")) {
       <value>1234567891234567891234567890.123456789</value>.convertTo[BigDecimal]
     }
-    assertResult(Left(<value>1234567891234567891234567890.123456789</value>)) {
-      BigDecimalXmlElemFormat.write(BigDecimal("1234567891234567891234567890.123456789"), "value")
+    assertResult(<value>1234567891234567891234567890.123456789</value>) {
+      BigDecimal("1234567891234567891234567890.123456789").toNode("value")
     }
     intercept[DeserializationException] {
       BigDecimalXmlElemFormat.read(Right(Attribute("value", Text("1234567891234567891234567890.123456789"), Null)))
