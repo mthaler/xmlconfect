@@ -24,8 +24,10 @@ package xmlconfect {
 
   class SerializationException(msg: String) extends RuntimeException(msg)
 
-  private[xmlconfect] class PimpedElem(val elem: Elem) extends AnyVal {
+  private[xmlconfect] class PimpedElem(val elem: Elem) {
 
-    def convertTo[T](implicit reader: XmlElemReader[T]): T = reader.read(Left(elem))
+    def convertTo[T](implicit reader: XmlElemReader[T]): T = {
+      reader.read(Left(elem))
+    }
   }
 }
