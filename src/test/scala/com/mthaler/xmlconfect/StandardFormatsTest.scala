@@ -43,6 +43,20 @@ class StandardFormatsTest extends FunSuite {
     }
   }
 
+  test("tuple1") {
+    import BasicAttrFormats._
+    val f = StandardFormats.tuple1Format[String]
+    assertResult(Tuple1("test")) {
+      f.read(Right(Attribute("_1", Text("test"), Null)))
+    }
+    assertResult(Right(Attribute("_1", Text("test"), Null))) {
+      f.write(Tuple1("test"), "value")
+    }
+    intercept[DeserializationException] {
+      f.read(Left(<test/>))
+    }
+  }
+
   test("tuple2") {
     import BasicAttrFormats._
     val f = StandardFormats.tuple2Format[String, Int]
@@ -51,6 +65,20 @@ class StandardFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)))) {
       f.write(("test", 42), "value")
+    }
+    intercept[DeserializationException] {
+      f.read(Left(<test/>))
+    }
+  }
+
+  test("tuple3") {
+    import BasicAttrFormats._
+    val f = StandardFormats.tuple3Format[String, Int, Boolean]
+    assertResult(("test", 42, true)) {
+      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null))))
+    }
+    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)))) {
+      f.write(("test", 42, true), "value")
     }
     intercept[DeserializationException] {
       f.read(Left(<test/>))
