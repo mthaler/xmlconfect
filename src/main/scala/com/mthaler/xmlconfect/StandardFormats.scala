@@ -26,16 +26,24 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple1Format[A](implicit format1: XmlAttrFormat[A]) = new XmlAttrFormat[Tuple1[A]] {
+  implicit def tuple1Format[A](implicit format1: XmlFormat[A]) = new XmlElemFormat[Tuple1[A]] {
 
     def read(value: XML, name: String = "") = value match {
-      case Left(node) => deserializationError("Reading nodes not supported")
-      case md @ Right(metaData) =>
-        val a = format1.read(md, "_1")
+      case Left(node) =>
+        val a = format1 match {
+          case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
+          case _ => format1.read(Left((node \ "_1").head))
+        }
         Tuple1(a)
+      case Right(metaData) => deserializationError("Reading attributes not supported")
     }
 
-    def write(t: Tuple1[A], name: String = "") = format1.write(t._1, "_1")
+    def write(t: Tuple1[A], name: String = "") = {
+      format1.write(t._1, "_1") match {
+        case Left(node) => elem(name, Null, Seq(node))
+        case Right(metaData) => elem(name, metaData, Nil)
+      }
+    }
   }
 
   implicit def tuple2Format[A, B](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B]) = new XmlAttrFormat[(A, B)] {

@@ -43,17 +43,31 @@ class StandardFormatsTest extends FunSuite {
     }
   }
 
-  test("tuple1") {
+  test("tuple1attr") {
     import BasicAttrFormats._
-    val f = StandardFormats.tuple1Format[String]
+    implicit val f = StandardFormats.tuple1Format[String]
     assertResult(Tuple1("test")) {
-      f.read(Right(Attribute("_1", Text("test"), Null)))
+      <Tuple1 _1="test"/>.convertTo[Tuple1[String]]
     }
-    assertResult(Right(Attribute("_1", Text("test"), Null))) {
-      f.write(Tuple1("test"), "value")
+    assertResult(<Tuple1 _1="test"/>) {
+      Tuple1("test").toNode("Tuple1")
     }
     intercept[DeserializationException] {
-      f.read(Left(<test/>))
+      f.read(Right(Attribute("_1", Text("test"), Null)))
+    }
+  }
+
+  test("tuple1elem") {
+    import BasicElemFormats._
+    implicit val f = StandardFormats.tuple1Format[String]
+    assertResult(Tuple1("test")) {
+      <Tuple1><_1>test</_1></Tuple1>.convertTo[Tuple1[String]]
+    }
+    assertResult(<Tuple1><_1>test</_1></Tuple1>) {
+      Tuple1("test").toNode("Tuple1")
+    }
+    intercept[DeserializationException] {
+      f.read(Right(Attribute("_1", Text("test"), Null)))
     }
   }
 
