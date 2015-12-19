@@ -1,6 +1,6 @@
 package com.mthaler.xmlconfect
 
-import scala.xml.Null
+import scala.xml.{ TopScope, Elem, Null }
 
 /**
  * Provides the XmlFormats for the non-collection standard types.
@@ -46,17 +46,34 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple2Format[A, B](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B]) = new XmlAttrFormat[(A, B)] {
+  implicit def tuple2Format[A, B](implicit format1: XmlFormat[A], format2: XmlFormat[B]) = new XmlElemFormat[(A, B)] {
 
     def read(value: XML, name: String = "") = value match {
-      case Left(node) => deserializationError("Reading nodes not supported")
-      case md @ Right(metaData) =>
-        val a = format1.read(md, "_1")
-        val b = format2.read(md, "_2")
+      case Left(node) =>
+        val a = format1 match {
+          case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
+          case _ => format1.read(Left((node \ "_1").head))
+        }
+        val b = format2 match {
+          case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
+          case _ => format2.read(Left((node \ "_2").head))
+        }
         (a, b)
+      case Right(metaData) => deserializationError("Reading attributes not supported")
     }
 
-    def write(t: (A, B), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get))
+    def write(t: (A, B), name: String = "") = {
+      var result = Elem(null, name, Null, TopScope)
+      format1.write(t._1, "_1") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format2.write(t._2, "_2") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      Left(result)
+    }
   }
 
   implicit def tuple3Format[A, B, C](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B], format3: XmlAttrFormat[C]) = new XmlAttrFormat[(A, B, C)] {

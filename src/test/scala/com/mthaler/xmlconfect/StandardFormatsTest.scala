@@ -67,21 +67,35 @@ class StandardFormatsTest extends FunSuite {
       Tuple1("test").toNode("Tuple1")
     }
     intercept[DeserializationException] {
-      f.read(Right(Attribute("_1", Text("test"), Null)))
+      f.read(Right(Null))
     }
   }
 
-  test("tuple2") {
+  test("tuple2attr") {
     import BasicAttrFormats._
-    val f = StandardFormats.tuple2Format[String, Int]
+    implicit val f = StandardFormats.tuple2Format[String, Int]
     assertResult(("test", 42)) {
-      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null))))
+      <Tuple2 _1="test" _2="42"/>.convertTo[(String, Int)]
     }
-    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)))) {
-      f.write(("test", 42), "value")
+    assertResult(<Tuple2 _1="test" _2="42"/>) {
+      ("test", 42).toNode("Tuple2")
     }
     intercept[DeserializationException] {
-      f.read(Left(<test/>))
+      f.read(Right(Null))
+    }
+  }
+
+  test("tuple2elem") {
+    import BasicElemFormats._
+    implicit val f = StandardFormats.tuple2Format[String, Int]
+    assertResult(("test", 42)) {
+      <Tuple2><_1>test</_1><_2>42</_2></Tuple2>.convertTo[(String, Int)]
+    }
+    assertResult(<Tuple2><_1>test</_1><_2>42</_2></Tuple2>) {
+      ("test", 42).toNode("Tuple2")
+    }
+    intercept[DeserializationException] {
+      f.read(Right(Null))
     }
   }
 
