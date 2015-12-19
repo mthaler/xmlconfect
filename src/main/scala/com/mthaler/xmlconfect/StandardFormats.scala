@@ -64,4 +64,19 @@ object StandardFormats {
 
     def write(t: (A, B, C), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get.append(format3.write(t._3, "_3").right.get)))
   }
+
+  implicit def tuple4Format[A, B, C, D](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B], format3: XmlAttrFormat[C], format4: XmlFormat[D]) = new XmlAttrFormat[(A, B, C, D)] {
+
+    def read(value: XML, name: String = "") = value match {
+      case Left(node) => deserializationError("Reading nodes not supported")
+      case md @ Right(metaData) =>
+        val a = format1.read(md, "_1")
+        val b = format2.read(md, "_2")
+        val c = format3.read(md, "_3")
+        val d = format4.read(md, "_4")
+        (a, b, c, d)
+    }
+
+    def write(t: (A, B, C, D), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get.append(format3.write(t._3, "_3").right.get).append(format4.write(t._4, "_4").right.get)))
+  }
 }

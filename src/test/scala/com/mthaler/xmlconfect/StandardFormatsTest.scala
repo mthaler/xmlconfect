@@ -84,4 +84,18 @@ class StandardFormatsTest extends FunSuite {
       f.read(Left(<test/>))
     }
   }
+
+  test("tuple4") {
+    import BasicAttrFormats._
+    val f = StandardFormats.tuple4Format[String, Int, Boolean, BigInt]
+    assertResult(("test", 42, true, BigInt(42))) {
+      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)).append(Attribute("_4", Text("42"), Null))))
+    }
+    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)).append(Attribute("_4", Text("42"), Null)))) {
+      f.write(("test", 42, true, BigInt(42)), "value")
+    }
+    intercept[DeserializationException] {
+      f.read(Left(<test/>))
+    }
+  }
 }
