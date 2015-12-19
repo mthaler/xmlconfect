@@ -43,6 +43,56 @@ class StandardFormatsTest extends FunSuite {
     }
   }
 
+  test("eitherattr") {
+    import BasicAttrFormats._
+    implicit val f = StandardFormats.eitherFormat[String, Int]
+    val l: Either[String, Int] = Left("test")
+    assertResult(<Either left="test"/>) {
+      l.toNode("Either")
+    }
+    assertResult(Left("test")) {
+      <Either left="test"/>.convertTo[Either[String, Int]]
+    }
+    val r: Either[String, Int] = Right(42)
+    assertResult(<Either right="42"/>) {
+      r.toNode("Either")
+    }
+    assertResult(Right(42)) {
+      <Either right="42"/>.convertTo[Either[String, Int]]
+    }
+    intercept[DeserializationException] {
+      <Either/>.convertTo[Either[String, Int]]
+    }
+    intercept[DeserializationException] {
+      <Either left="test" right="42"/>.convertTo[Either[String, Int]]
+    }
+  }
+
+  test("eitherelem") {
+    import BasicElemFormats._
+    implicit val f = StandardFormats.eitherFormat[String, Int]
+    val l: Either[String, Int] = Left("test")
+    assertResult(<Either><left>test</left></Either>) {
+      l.toNode("Either")
+    }
+    assertResult(Left("test")) {
+      <Either><left>test</left></Either>.convertTo[Either[String, Int]]
+    }
+    val r: Either[String, Int] = Right(42)
+    assertResult(<Either><right>42</right></Either>) {
+      r.toNode("Either")
+    }
+    assertResult(Right(42)) {
+      <Either><right>42</right></Either>.convertTo[Either[String, Int]]
+    }
+    intercept[DeserializationException] {
+      <Either/>.convertTo[Either[String, Int]]
+    }
+    intercept[DeserializationException] {
+      <Either><left>test</left><right>42</right></Either>.convertTo[Either[String, Int]]
+    }
+  }
+
   test("tuple1attr") {
     import BasicAttrFormats._
     implicit val f = StandardFormats.tuple1Format[String]
