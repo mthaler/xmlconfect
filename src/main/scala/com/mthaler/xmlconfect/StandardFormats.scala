@@ -63,7 +63,7 @@ object StandardFormats {
     }
 
     def write(t: (A, B), name: String = "") = {
-      var result = Elem(null, name, Null, TopScope)
+      var result = emptyElem(name)
       format1.write(t._1, "_1") match {
         case Left(node) => result = result.copy(child = result.child :+ node)
         case Right(metaData) => result = result % metaData
@@ -76,32 +76,89 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple3Format[A, B, C](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B], format3: XmlAttrFormat[C]) = new XmlAttrFormat[(A, B, C)] {
+  implicit def tuple3Format[A, B, C](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C]) = new XmlElemFormat[(A, B, C)] {
 
     def read(value: XML, name: String = "") = value match {
-      case Left(node) => deserializationError("Reading nodes not supported")
-      case md @ Right(metaData) =>
-        val a = format1.read(md, "_1")
-        val b = format2.read(md, "_2")
-        val c = format3.read(md, "_3")
+      case Left(node) =>
+        val a = format1 match {
+          case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
+          case _ => format1.read(Left((node \ "_1").head))
+        }
+        val b = format2 match {
+          case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
+          case _ => format2.read(Left((node \ "_2").head))
+        }
+        val c = format3 match {
+          case _: XmlAttrFormat[_] => format3.read(Right(node.attributes), "_3")
+          case _ => format3.read(Left((node \ "_3").head))
+        }
         (a, b, c)
+      case Right(metaData) => deserializationError("Reading attributes not supported")
     }
 
-    def write(t: (A, B, C), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get.append(format3.write(t._3, "_3").right.get)))
+    def write(t: (A, B, C), name: String = "") = {
+      var result = emptyElem(name)
+      format1.write(t._1, "_1") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format2.write(t._2, "_2") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format3.write(t._3, "_3") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      Left(result)
+    }
   }
 
-  implicit def tuple4Format[A, B, C, D](implicit format1: XmlAttrFormat[A], format2: XmlAttrFormat[B], format3: XmlAttrFormat[C], format4: XmlFormat[D]) = new XmlAttrFormat[(A, B, C, D)] {
+  implicit def tuple4Format[A, B, C, D](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C], format4: XmlFormat[D]) = new XmlElemFormat[(A, B, C, D)] {
 
     def read(value: XML, name: String = "") = value match {
-      case Left(node) => deserializationError("Reading nodes not supported")
-      case md @ Right(metaData) =>
-        val a = format1.read(md, "_1")
-        val b = format2.read(md, "_2")
-        val c = format3.read(md, "_3")
-        val d = format4.read(md, "_4")
+      case Left(node) =>
+        val a = format1 match {
+          case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
+          case _ => format1.read(Left((node \ "_1").head))
+        }
+        val b = format2 match {
+          case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
+          case _ => format2.read(Left((node \ "_2").head))
+        }
+        val c = format3 match {
+          case _: XmlAttrFormat[_] => format3.read(Right(node.attributes), "_3")
+          case _ => format3.read(Left((node \ "_3").head))
+        }
+        val d = format4 match {
+          case _: XmlAttrFormat[_] => format4.read(Right(node.attributes), "_4")
+          case _ => format4.read(Left((node \ "_4").head))
+        }
         (a, b, c, d)
+      case Right(metaData) => deserializationError("Reading attributes not supported")
     }
 
-    def write(t: (A, B, C, D), name: String = "") = Right(format1.write(t._1, "_1").right.get.append(format2.write(t._2, "_2").right.get.append(format3.write(t._3, "_3").right.get).append(format4.write(t._4, "_4").right.get)))
+    def write(t: (A, B, C, D), name: String = "") = {
+      var result = emptyElem(name)
+      format1.write(t._1, "_1") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format2.write(t._2, "_2") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format3.write(t._3, "_3") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      format4.write(t._4, "_4") match {
+        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Right(metaData) => result = result % metaData
+      }
+      Left(result)
+    }
   }
+
+  private def emptyElem(name: String) = Elem(null, name, Null, TopScope, true)
 }

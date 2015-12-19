@@ -11,7 +11,7 @@ package object xmlconfect {
   def serializationError(msg: String) = throw new SerializationException(msg)
 
   def attribute(name: String, value: String) = Right(Attribute(name, Text(value.toString), Null))
-  def elem(name: String, attributes: MetaData, children: Seq[Node]) = Left(Elem(null, name, attributes, TopScope, children: _*))
+  def elem(name: String, attributes: MetaData, children: Seq[Node]) = Left(Elem(null, name, attributes, TopScope, true, children: _*))
 
   def xmlReader[T](implicit reader: XmlReader[T]) = reader
   def xmlWriter[T](implicit writer: XmlWriter[T]) = writer

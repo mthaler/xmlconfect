@@ -99,31 +99,59 @@ class StandardFormatsTest extends FunSuite {
     }
   }
 
-  test("tuple3") {
+  test("tuple3attr") {
     import BasicAttrFormats._
-    val f = StandardFormats.tuple3Format[String, Int, Boolean]
+    implicit val f = StandardFormats.tuple3Format[String, Int, Boolean]
     assertResult(("test", 42, true)) {
-      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null))))
+      <Tuple3 _1="test" _2="42" _3="true"/>.convertTo[(String, Int, Boolean)]
     }
-    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)))) {
-      f.write(("test", 42, true), "value")
+    assertResult(<Tuple3 _1="test" _2="42" _3="true"/>) {
+      ("test", 42, true).toNode("Tuple3")
     }
     intercept[DeserializationException] {
-      f.read(Left(<test/>))
+      f.read(Right(Null))
     }
   }
 
-  test("tuple4") {
-    import BasicAttrFormats._
-    val f = StandardFormats.tuple4Format[String, Int, Boolean, BigInt]
-    assertResult(("test", 42, true, BigInt(42))) {
-      f.read(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)).append(Attribute("_4", Text("42"), Null))))
+  test("tuple3elem") {
+    import BasicElemFormats._
+    implicit val f = StandardFormats.tuple3Format[String, Int, Boolean]
+    assertResult(("test", 42, true)) {
+      <Tuple3><_1>test</_1><_2>42</_2><_3>true</_3></Tuple3>.convertTo[(String, Int, Boolean)]
     }
-    assertResult(Right(Attribute("_1", Text("test"), Null).append(Attribute("_2", Text("42"), Null)).append(Attribute("_3", Text("true"), Null)).append(Attribute("_4", Text("42"), Null)))) {
-      f.write(("test", 42, true, BigInt(42)), "value")
+    assertResult(<Tuple3><_1>test</_1><_2>42</_2><_3>true</_3></Tuple3>) {
+      ("test", 42, true).toNode("Tuple3")
     }
     intercept[DeserializationException] {
-      f.read(Left(<test/>))
+      f.read(Right(Null))
+    }
+  }
+
+  test("tuple4attr") {
+    import BasicAttrFormats._
+    implicit val f = StandardFormats.tuple4Format[String, Int, Boolean, BigInt]
+    assertResult(("test", 42, true, BigInt(1000))) {
+      <Tuple4 _1="test" _2="42" _3="true" _4="1000"/>.convertTo[(String, Int, Boolean, BigInt)]
+    }
+    assertResult(<Tuple4 _1="test" _2="42" _3="true" _4="1000"/>) {
+      ("test", 42, true, BigInt(1000)).toNode("Tuple4")
+    }
+    intercept[DeserializationException] {
+      f.read(Right(Null))
+    }
+  }
+
+  test("tuple4elem") {
+    import BasicElemFormats._
+    implicit val f = StandardFormats.tuple4Format[String, Int, Boolean, BigInt]
+    assertResult(("test", 42, true, BigInt(1000))) {
+      <Tuple4><_1>test</_1><_2>42</_2><_3>true</_3><_4>1000</_4></Tuple4>.convertTo[(String, Int, Boolean, BigInt)]
+    }
+    assertResult(<Tuple4><_1>test</_1><_2>42</_2><_3>true</_3><_4>1000</_4></Tuple4>) {
+      ("test", 42, true, BigInt(1000)).toNode("Tuple4")
+    }
+    intercept[DeserializationException] {
+      f.read(Right(Null))
     }
   }
 }
