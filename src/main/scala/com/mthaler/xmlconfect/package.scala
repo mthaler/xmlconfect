@@ -37,9 +37,13 @@ package xmlconfect {
 
     def toNode(name: String)(implicit writer: XmlElemWriter[T]): Node = writer.write(any, name).left.get
   }
-  
+
   case class TNode(node: Node, transform: Node => Node) {
 
     def apply: Node = transform(node)
+  }
+  
+  object TNode {
+    def id(node: Node) = TNode(node, n => n)
   }
 }
