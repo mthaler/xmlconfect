@@ -9,7 +9,7 @@ import scala.xml.{ MetaData, Node }
 
 @implicitNotFound(msg = "Cannot find XmlReader or XmlFormat type class for ${T}")
 trait XmlReader[T] {
-  def read(xml: Either[Node, MetaData], name: String = ""): T
+  def read(xml: XML, name: String = ""): T
 }
 
 /**
@@ -17,7 +17,7 @@ trait XmlReader[T] {
  */
 @implicitNotFound(msg = "Cannot find XmlWriter or XmlFormat type class for ${T}")
 trait XmlWriter[T] {
-  def write(obj: T, name: String = ""): Either[Node, MetaData]
+  def write(obj: T, name: String = ""): XML
 }
 
 /**

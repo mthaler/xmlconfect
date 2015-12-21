@@ -31,7 +31,7 @@ class AdditionalFormatsTest extends FunSuite {
 
   test("xmlFormatFromReaderWriter") {
     val reader = new XmlReader[Int] {
-      override def read(xml: Either[Node, MetaData], name: String) = xml match {
+      override def read(xml: XML, name: String) = xml match {
         case Left(node) => deserializationError("Reading nodes not supported")
         case Right(metaData) => metaData(name).text.toInt
       }
@@ -54,7 +54,7 @@ class AdditionalFormatsTest extends FunSuite {
 
   test("xmlAttrFormatFromReaderWriter") {
     val reader = new XmlAttrReader[Int] {
-      override def read(xml: Either[Node, MetaData], name: String) = xml match {
+      override def read(xml: XML, name: String) = xml match {
         case Left(node) => deserializationError("Reading nodes not supported")
         case Right(metaData) => metaData(name).text.toInt
       }
@@ -77,7 +77,7 @@ class AdditionalFormatsTest extends FunSuite {
 
   test("xmlElemFormatFromReaderWriter") {
     val reader = new XmlElemReader[Int] {
-      override def read(xml: Either[Node, MetaData], name: String) = xml match {
+      override def read(xml: XML, name: String) = xml match {
         case Left(node) => node.text.toInt
         case Right(metaData) => deserializationError("Reading attributes not supported")
       }

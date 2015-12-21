@@ -18,9 +18,9 @@ object AdditionalFormats {
    */
   def ignoreFormat[T](value: T) = new XmlFormat[T] {
 
-    override def read(xml: Either[Node, MetaData], name: String): T = value
+    override def read(xml: XML, name: String): T = value
 
-    override def write(obj: T, name: String): Either[Node, MetaData] = Right(Null)
+    override def write(obj: T, name: String): XML = Right(Null)
   }
 
   /**
@@ -48,7 +48,7 @@ object AdditionalFormats {
   }
 
   def namedFormat[T](format: XmlFormat[T], name: String) = new XmlFormat[T] {
-    override def read(xml: Either[Node, MetaData], n: String): T = format.read(xml, name)
-    override def write(obj: T, n: String): Either[Node, MetaData] = format.write(obj, name)
+    override def read(xml: XML, n: String): T = format.read(xml, name)
+    override def write(obj: T, n: String): XML = format.write(obj, name)
   }
 }
