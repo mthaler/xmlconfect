@@ -93,14 +93,14 @@ class AdditionalFormatsTest extends FunSuite {
     import AdditionalFormats.namedFormat
     import BasicAttrFormats._
     case class Car(name: String, manufacturer: String)
-    val f = xmlFormat2(Car)
+    implicit val f = xmlFormat2(Car)
     val nf = namedFormat(f, "Test")
     val c = Car("Golf", "Volkswagen")
     assertResult(<Car name="Golf" manufacturer="Volkswagen"/>) {
-      f.write(c).left.get.apply
+      c.toNode
     }
     assertResult(Car("Golf", "Volkswagen")) {
-      f.read(Left(TNode.id(<Car name="Golf" manufacturer="Volkswagen"/>)))
+      <Car name="Golf" manufacturer="Volkswagen"/>.convertTo[Car]
     }
     assertResult(<Test name="Golf" manufacturer="Volkswagen"/>) {
       nf.write(c).left.get.apply

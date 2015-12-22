@@ -91,7 +91,7 @@ object ProductFormat {
 
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case root: XmlElemReader[T] =>
-      val elem = Left(TNode.id((node \ fieldName).head))
+      val elem = Left(TNode(node, n => (n \ fieldName).head))
       reader.read(elem, fieldName)
     case _ =>
       try {
