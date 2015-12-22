@@ -10,7 +10,7 @@ package object xmlconfect {
   def deserializationError(msg: String, cause: Throwable = null, fieldNames: List[String] = Nil) = throw new DeserializationException(msg, cause, fieldNames)
   def serializationError(msg: String) = throw new SerializationException(msg)
 
-  def attribute(name: String, value: String) = Right(Attribute(name, Text(value.toString), Null))
+  def attribute(name: String, value: String) = Attribute(name, Text(value.toString), Null)
   def elem(name: String, attributes: MetaData, children: Seq[Node]) = Left(Elem(null, name, attributes, TopScope, true, children: _*))
 
   def xmlReader[T](implicit reader: XmlReader[T]) = reader
@@ -40,10 +40,21 @@ package xmlconfect {
 
   case class TNode(node: Node, transform: Node => Node) {
 
+    /**
+     * Applies the given transformation to the node
+     *
+     * @return transformed node
+     */
     def apply: Node = transform(node)
   }
 
   object TNode {
+    /**
+     * Creates a new TNode with an identity transformation
+     *
+     * @param node node
+     * @return TNode with identity transformation
+     */
     def id(node: Node) = TNode(node, n => n)
   }
 }

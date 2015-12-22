@@ -37,7 +37,7 @@ class AdditionalFormatsTest extends FunSuite {
       }
     }
     val writer = new XmlWriter[Int] {
-      override def write(obj: Int, name: String): XML = attribute(name, obj.toString)
+      override def write(obj: Int, name: String): XML = Right(attribute(name, obj.toString))
     }
     import AdditionalFormats.xmlFormat
     val format = xmlFormat(reader, writer)
@@ -56,9 +56,7 @@ class AdditionalFormatsTest extends FunSuite {
     val reader = new XmlAttrReader[Int] {
       def readAttr(metaData: MetaData, name: String = ""): Int = metaData(name).text.toInt
     }
-    val writer = new XmlAttrWriter[Int] {
-      override def write(obj: Int, name: String): XML = attribute(name, obj.toString)
-    }
+    val writer = new XmlAttrWriter[Int] {}
     import AdditionalFormats.xmlAttrFormat
     val format = xmlAttrFormat(reader, writer)
     assertResult(42) {

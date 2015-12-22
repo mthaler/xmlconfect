@@ -35,7 +35,7 @@ object AdditionalFormats {
    * Constructs a XmlAttrFormat from its two parts, XmlAttrReader and XmlAttrWriter.
    */
   def xmlAttrFormat[T](reader: XmlAttrReader[T], writer: XmlAttrWriter[T]) = new XmlAttrFormat[T] {
-    def write(obj: T, name: String = "") = writer.write(obj, name)
+    protected override def writeAttr(obj: T, name: String = ""): MetaData = writer.write(obj, name).right.get
     protected def readAttr(metaData: MetaData, name: String = ""): T = reader.read(Right(metaData), name)
   }
 

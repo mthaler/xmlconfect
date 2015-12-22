@@ -43,7 +43,11 @@ trait XmlAttrReader[T] extends XmlReader[T] {
  * A special XmlWriter capable of writing an XML attribute.
  */
 @implicitNotFound(msg = "Cannot find XmlAttrWriter or XmlAttrFormat type class for ${T}")
-trait XmlAttrWriter[T] extends XmlWriter[T]
+trait XmlAttrWriter[T] extends XmlWriter[T] {
+  final def write(obj: T, name: String = ""): XML = Right(writeAttr(obj, name))
+
+  protected def writeAttr(obj: T, name: String = ""): MetaData = attribute(name, obj.toString)
+}
 
 /**
  * A special XmlFormat signaling that the format produces an XML attribute.
