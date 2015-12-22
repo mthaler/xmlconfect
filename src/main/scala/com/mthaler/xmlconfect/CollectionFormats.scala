@@ -1,7 +1,7 @@
 package com.mthaler.xmlconfect
 
 import scala.reflect.ClassTag
-import scala.xml.{ Elem, Null }
+import scala.xml.{ Node, Elem, Null }
 import scala.language.postfixOps
 
 object CollectionFormats {
@@ -10,10 +10,7 @@ object CollectionFormats {
    * Supplies the XmlElemFormat for lists.
    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
-    def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => node.child.collect { case elem: Elem => format.read(Left(elem)) } toList
-      case Right(metaData) => deserializationError("Reading lists from attributes not supported")
-    }
+    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toList
     def write(value: List[T], name: String = "") = {
       val children = value.map(format.write(_).left.get)
       elem(name, Null, children)
@@ -24,10 +21,7 @@ object CollectionFormats {
    * Supplies the XmlElemFormat for arrays.
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
-    def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => node.child.collect { case elem: Elem => format.read(Left(elem)) } toArray
-      case Right(metaData) => deserializationError("Reading arrays from attributes not supported")
-    }
+    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toArray
     def write(value: Array[T], name: String = "") = {
       val children = value.map(format.write(_).left.get)
       elem(name, Null, children)
@@ -48,10 +42,7 @@ object CollectionFormats {
    * List => I.
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = new XmlElemFormat[I] {
-    def read(xml: XML, name: String = "") = xml match {
-      case Left(node) => f(node.child.collect { case elem: Elem => format.read(Left(elem)) } toVector)
-      case Right(metaData) => deserializationError("Reading lists from attributes not supported")
-    }
+    protected def readElem(node: Node, name: String = "") = f(node.child.collect { case elem: Elem => format.read(Left(elem)) } toVector)
     def write(iterable: I, name: String = "") = {
       val children = iterable.toVector.map(format.write(_).left.get)
       elem(name, Null, children)

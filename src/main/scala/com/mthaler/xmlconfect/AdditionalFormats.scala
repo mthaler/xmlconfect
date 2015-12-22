@@ -44,7 +44,7 @@ object AdditionalFormats {
    */
   def xmlElemFormat[T](reader: XmlElemReader[T], writer: XmlElemWriter[T]) = new XmlElemFormat[T] {
     def write(obj: T, name: String = "") = writer.write(obj, name)
-    def read(xml: XML, name: String = "") = reader.read(xml, name)
+    protected def readElem(node: Node, name: String = ""): T = reader.read(Left(node), name)
   }
 
   def namedFormat[T](format: XmlFormat[T], name: String) = new XmlFormat[T] {

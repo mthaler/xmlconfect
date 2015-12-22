@@ -54,7 +54,14 @@ trait XmlAttrFormat[T] extends XmlFormat[T] with XmlAttrReader[T] with XmlAttrWr
  * A special XmlReader capable of reading an XML element.
  */
 @implicitNotFound(msg = "Cannot find XmlElemReader or RootXmlFormat type class for ${T}")
-trait XmlElemReader[T] extends XmlReader[T]
+trait XmlElemReader[T] extends XmlReader[T] {
+  final def read(xml: XML, name: String = ""): T = xml match {
+    case Left(node) => readElem(node, name)
+    case Right(metaData) => deserializationError("Reading attributes not supported")
+  }
+
+  protected def readElem(node: Node, name: String = ""): T
+}
 
 /**
  * A special XmlWriter capable of writing an XML element.
