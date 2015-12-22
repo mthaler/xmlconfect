@@ -109,4 +109,14 @@ class AdditionalFormatsTest extends FunSuite {
       nf.read(Left(TNode.id(<Test name="Golf" manufacturer="Volkswagen"/>)))
     }
   }
+
+  test("namedFormat2") {
+    import BasicElemFormats._
+    import CollectionFormats._
+    import ProductFormat._
+    implicit val friendsFormat = AdditionalFormats.namedFormat(xmlFormat1(Friends), "Buddies")
+    implicit val f = xmlFormat2(Person)
+    val p = Person("Albert Einstein", Friends(List("Richard Feynman", "Werner Heisenberg", "Paul Dirac")))
+    println(p.toNode)
+  }
 }
