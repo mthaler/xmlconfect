@@ -43,7 +43,7 @@ object AdditionalFormats {
    * Constructs a XmlElemFormat from its two parts, XmlElemReader and XmlElemWriter.
    */
   def xmlElemFormat[T](reader: XmlElemReader[T], writer: XmlElemWriter[T]) = new XmlElemFormat[T] {
-    def write(obj: T, name: String = "") = writer.write(obj, name)
+    protected override def writeElem(obj: T, name: String = "") = writer.write(obj, name).left.get
     protected def readElem(node: Node, name: String = ""): T = reader.read(Left(node), name)
   }
 

@@ -57,7 +57,7 @@ object StandardFormats {
       }
     }
 
-    def write(e: Either[A, B], name: String = "") = {
+    protected override def writeElem(e: Either[A, B], name: String = "") = {
       e match {
         case Left(value) => format1.write(value, "left") match {
           case Left(node) => elem(name, Null, Seq(node))
@@ -81,7 +81,7 @@ object StandardFormats {
       Tuple1(a)
     }
 
-    def write(t: Tuple1[A], name: String = "") = {
+    protected override def writeElem(t: Tuple1[A], name: String = "") = {
       format1.write(t._1, "_1") match {
         case Left(node) => elem(name, Null, Seq(node))
         case Right(metaData) => elem(name, metaData, Nil)
@@ -103,7 +103,7 @@ object StandardFormats {
       (a, b)
     }
 
-    def write(t: (A, B), name: String = "") = {
+    protected override def writeElem(t: (A, B), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
         case Left(node) => result = result.copy(child = result.child :+ node)
@@ -113,7 +113,7 @@ object StandardFormats {
         case Left(node) => result = result.copy(child = result.child :+ node)
         case Right(metaData) => result = result % metaData
       }
-      Left(result)
+      result
     }
   }
 
@@ -135,7 +135,7 @@ object StandardFormats {
       (a, b, c)
     }
 
-    def write(t: (A, B, C), name: String = "") = {
+    protected override def writeElem(t: (A, B, C), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
         case Left(node) => result = result.copy(child = result.child :+ node)
@@ -149,7 +149,7 @@ object StandardFormats {
         case Left(node) => result = result.copy(child = result.child :+ node)
         case Right(metaData) => result = result % metaData
       }
-      Left(result)
+      result
     }
   }
 
@@ -175,7 +175,7 @@ object StandardFormats {
       (a, b, c, d)
     }
 
-    def write(t: (A, B, C, D), name: String = "") = {
+    protected override def writeElem(t: (A, B, C, D), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
         case Left(node) => result = result.copy(child = result.child :+ node)
@@ -193,7 +193,7 @@ object StandardFormats {
         case Left(node) => result = result.copy(child = result.child :+ node)
         case Right(metaData) => result = result % metaData
       }
-      Left(result)
+      result
     }
   }
 

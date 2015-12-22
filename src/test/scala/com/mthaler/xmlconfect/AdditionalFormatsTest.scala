@@ -74,9 +74,7 @@ class AdditionalFormatsTest extends FunSuite {
     val reader = new XmlElemReader[Int] {
       protected def readElem(node: Node, name: String = ""): Int = node.text.toInt
     }
-    val writer = new XmlElemWriter[Int] {
-      override def write(obj: Int, name: String): XML = elem(name, Null, Seq(Text(obj.toString)))
-    }
+    val writer = new XmlElemWriter[Int] {}
     import AdditionalFormats.xmlElemFormat
     implicit val format = xmlElemFormat(reader, writer)
     assertResult(42) {

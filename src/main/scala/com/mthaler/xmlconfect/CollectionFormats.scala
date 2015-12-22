@@ -11,7 +11,7 @@ object CollectionFormats {
    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
     protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toList
-    def write(value: List[T], name: String = "") = {
+    protected override def writeElem(value: List[T], name: String = "") = {
       val children = value.map(format.write(_).left.get)
       elem(name, Null, children)
     }
@@ -22,7 +22,7 @@ object CollectionFormats {
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
     protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toArray
-    def write(value: Array[T], name: String = "") = {
+    protected override def writeElem(value: Array[T], name: String = "") = {
       val children = value.map(format.write(_).left.get)
       elem(name, Null, children)
     }
@@ -43,7 +43,7 @@ object CollectionFormats {
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = new XmlElemFormat[I] {
     protected def readElem(node: Node, name: String = "") = f(node.child.collect { case elem: Elem => format.read(Left(elem)) } toVector)
-    def write(iterable: I, name: String = "") = {
+    protected override def writeElem(iterable: I, name: String = "") = {
       val children = iterable.toVector.map(format.write(_).left.get)
       elem(name, Null, children)
     }

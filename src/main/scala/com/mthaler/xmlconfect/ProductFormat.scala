@@ -118,7 +118,7 @@ object ProductFormat {
     xmlFormat(construct, p1)
   }
   def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): XmlElemFormat[T] = new XmlElemFormat[T] {
-    def write(p: T, name: String = "") = {
+    protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
       fields.sizeHint(1 * 2)
       fields ++= productElement2Field[P1](fieldName1, p, 0)
@@ -141,7 +141,7 @@ object ProductFormat {
     xmlFormat(construct, p1, p2)
   }
   def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): XmlElemFormat[T] = new XmlElemFormat[T] {
-    def write(p: T, name: String = "") = {
+    protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
       fields.sizeHint(2 * 3)
       fields ++= productElement2Field[P1](fieldName1, p, 0)

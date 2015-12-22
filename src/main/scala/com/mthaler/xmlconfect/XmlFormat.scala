@@ -1,7 +1,7 @@
 package com.mthaler.xmlconfect
 
 import scala.annotation.implicitNotFound
-import scala.xml.{ MetaData, Node }
+import scala.xml.{ Text, Null, MetaData, Node }
 
 /**
  * Provides the XML deserialization for type T.
@@ -71,7 +71,11 @@ trait XmlElemReader[T] extends XmlReader[T] {
  * A special XmlWriter capable of writing an XML element.
  */
 @implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
-trait XmlElemWriter[T] extends XmlWriter[T]
+trait XmlElemWriter[T] extends XmlWriter[T] {
+  final def write(obj: T, name: String = ""): XML = Left(writeElem(obj, name))
+
+  protected def writeElem(obj: T, name: String = ""): Node = elem(name, Null, Seq(Text(obj.toString)))
+}
 
 /**
  * A special XmlFormat signaling that the format produces an XML element.

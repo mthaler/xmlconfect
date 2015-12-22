@@ -56,6 +56,6 @@ object BasicAttrFormats {
 
   implicit object SymbolXmlAttrFormat extends XmlAttrFormat[Symbol] {
     def readAttr(metaData: MetaData, name: String = ""): Symbol = Symbol(metaData(name).text)
-    protected override def writeAttr(obj: Symbol, name: String = ""): MetaData = attribute(name, obj.name.toString)
+    protected override def writeAttr(obj: Symbol, name: String = ""): MetaData = attribute(name, obj.name)
   }
 }
