@@ -54,10 +54,7 @@ class AdditionalFormatsTest extends FunSuite {
 
   test("xmlAttrFormatFromReaderWriter") {
     val reader = new XmlAttrReader[Int] {
-      override def read(xml: XML, name: String) = xml match {
-        case Left(node) => deserializationError("Reading nodes not supported")
-        case Right(metaData) => metaData(name).text.toInt
-      }
+      def readAttr(metaData: MetaData, name: String = ""): Int = metaData(name).text.toInt
     }
     val writer = new XmlAttrWriter[Int] {
       override def write(obj: Int, name: String): XML = attribute(name, obj.toString)

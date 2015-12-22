@@ -42,7 +42,7 @@ package xmlconfect {
 
     def apply: Node = transform(node)
   }
-  
+
   object TNode {
     def id(node: Node) = TNode(node, n => n)
   }
