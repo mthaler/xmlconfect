@@ -91,7 +91,7 @@ object ProductFormat {
 
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case root: XmlElemReader[T] =>
-      val elem = Left((node \ fieldName).head)
+      val elem = Left(TNode.id((node \ fieldName).head))
       reader.read(elem, fieldName)
     case _ =>
       try {
@@ -111,7 +111,7 @@ object ProductFormat {
     if (metaDataList.isEmpty) Null else metaDataList.reduce((m1, m2) => m1.copy(m2))
   }
 
-  def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node }
+  def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply }
 
   def xmlFormat1[P1: XF, T <: Product: ClassTag](construct: (P1) => T): XmlElemFormat[T] = {
     val Array(p1) = extractFieldNames(classTag[T])

@@ -35,7 +35,7 @@ object StandardFormats {
           case None => None
         }
         case _ => (node \ "left").headOption match {
-          case Some(n) => Some(format1.read(Left(n)))
+          case Some(n) => Some(format1.read(Left(TNode.id(n))))
           case None => None
         }
       }
@@ -45,7 +45,7 @@ object StandardFormats {
           case None => None
         }
         case _ => (node \ "right").headOption match {
-          case Some(n) => Some(format2.read(Left(n)))
+          case Some(n) => Some(format2.read(Left(TNode.id(n))))
           case None => None
         }
       }
@@ -60,11 +60,11 @@ object StandardFormats {
     protected override def writeElem(e: Either[A, B], name: String = "") = {
       e match {
         case Left(value) => format1.write(value, "left") match {
-          case Left(node) => elem(name, Null, Seq(node))
+          case Left(node) => elem(name, Null, Seq(node.apply))
           case Right(metaData) => elem(name, metaData, Nil)
         }
         case Right(value) => format2.write(value, "right") match {
-          case Left(node) => elem(name, Null, Seq(node))
+          case Left(node) => elem(name, Null, Seq(node.apply))
           case Right(metaData) => elem(name, metaData, Nil)
         }
       }
@@ -76,14 +76,14 @@ object StandardFormats {
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
         case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
-        case _ => format1.read(Left((node \ "_1").head))
+        case _ => format1.read(Left(TNode.id((node \ "_1").head)))
       }
       Tuple1(a)
     }
 
     protected override def writeElem(t: Tuple1[A], name: String = "") = {
       format1.write(t._1, "_1") match {
-        case Left(node) => elem(name, Null, Seq(node))
+        case Left(node) => elem(name, Null, Seq(node.apply))
         case Right(metaData) => elem(name, metaData, Nil)
       }
     }
@@ -94,11 +94,11 @@ object StandardFormats {
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
         case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
-        case _ => format1.read(Left((node \ "_1").head))
+        case _ => format1.read(Left(TNode.id((node \ "_1").head)))
       }
       val b = format2 match {
         case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
-        case _ => format2.read(Left((node \ "_2").head))
+        case _ => format2.read(Left(TNode.id((node \ "_2").head)))
       }
       (a, b)
     }
@@ -106,11 +106,11 @@ object StandardFormats {
     protected override def writeElem(t: (A, B), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format2.write(t._2, "_2") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       result
@@ -122,15 +122,15 @@ object StandardFormats {
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
         case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
-        case _ => format1.read(Left((node \ "_1").head))
+        case _ => format1.read(Left(TNode.id((node \ "_1").head)))
       }
       val b = format2 match {
         case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
-        case _ => format2.read(Left((node \ "_2").head))
+        case _ => format2.read(Left(TNode.id((node \ "_2").head)))
       }
       val c = format3 match {
         case _: XmlAttrFormat[_] => format3.read(Right(node.attributes), "_3")
-        case _ => format3.read(Left((node \ "_3").head))
+        case _ => format3.read(Left(TNode.id((node \ "_3").head)))
       }
       (a, b, c)
     }
@@ -138,15 +138,15 @@ object StandardFormats {
     protected override def writeElem(t: (A, B, C), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format2.write(t._2, "_2") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format3.write(t._3, "_3") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       result
@@ -158,19 +158,19 @@ object StandardFormats {
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
         case _: XmlAttrFormat[_] => format1.read(Right(node.attributes), "_1")
-        case _ => format1.read(Left((node \ "_1").head))
+        case _ => format1.read(Left(TNode.id((node \ "_1").head)))
       }
       val b = format2 match {
         case _: XmlAttrFormat[_] => format2.read(Right(node.attributes), "_2")
-        case _ => format2.read(Left((node \ "_2").head))
+        case _ => format2.read(Left(TNode.id((node \ "_2").head)))
       }
       val c = format3 match {
         case _: XmlAttrFormat[_] => format3.read(Right(node.attributes), "_3")
-        case _ => format3.read(Left((node \ "_3").head))
+        case _ => format3.read(Left(TNode.id((node \ "_3").head)))
       }
       val d = format4 match {
         case _: XmlAttrFormat[_] => format4.read(Right(node.attributes), "_4")
-        case _ => format4.read(Left((node \ "_4").head))
+        case _ => format4.read(Left(TNode.id((node \ "_4").head)))
       }
       (a, b, c, d)
     }
@@ -178,19 +178,19 @@ object StandardFormats {
     protected override def writeElem(t: (A, B, C, D), name: String = "") = {
       var result = emptyElem(name)
       format1.write(t._1, "_1") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format2.write(t._2, "_2") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format3.write(t._3, "_3") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       format4.write(t._4, "_4") match {
-        case Left(node) => result = result.copy(child = result.child :+ node)
+        case Left(node) => result = result.copy(child = result.child :+ node.apply)
         case Right(metaData) => result = result % metaData
       }
       result

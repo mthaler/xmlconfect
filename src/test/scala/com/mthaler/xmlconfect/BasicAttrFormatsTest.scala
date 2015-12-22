@@ -13,9 +13,6 @@ class BasicAttrFormatsTest extends FunSuite {
     assertResult(Right(Attribute("value", Text("true"), Null))) {
       BooleanXmlAttrFormat.write(true, "value")
     }
-    intercept[DeserializationException] {
-      BooleanXmlAttrFormat.read(Left(<value>true</value>))
-    }
   }
 
   test("byte") {
@@ -24,9 +21,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("42"), Null))) {
       ByteXmlAttrFormat.write(42.toByte, "value")
-    }
-    intercept[DeserializationException] {
-      ByteXmlAttrFormat.read(Left(<value>42</value>))
     }
   }
 
@@ -37,9 +31,6 @@ class BasicAttrFormatsTest extends FunSuite {
     assertResult(Right(Attribute("value", Text("42"), Null))) {
       ShortXmlAttrFormat.write(42.toShort, "value")
     }
-    intercept[DeserializationException] {
-      ShortXmlAttrFormat.read(Left(<value>42</value>))
-    }
   }
 
   test("int") {
@@ -48,9 +39,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("42"), Null))) {
       IntXmlAttrFormat.write(42, "value")
-    }
-    intercept[DeserializationException] {
-      IntXmlAttrFormat.read(Left(<value>42</value>))
     }
   }
 
@@ -61,9 +49,6 @@ class BasicAttrFormatsTest extends FunSuite {
     assertResult(Right(Attribute("value", Text("42"), Null))) {
       LongXmlAttrFormat.write(42l, "value")
     }
-    intercept[DeserializationException] {
-      LongXmlAttrFormat.read(Left(<value>42</value>))
-    }
   }
 
   test("float") {
@@ -72,9 +57,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("3.14"), Null))) {
       FloatXmlAttrFormat.write(3.14f, "value")
-    }
-    intercept[DeserializationException] {
-      FloatXmlAttrFormat.read(Left(<value>3.14</value>))
     }
   }
 
@@ -85,9 +67,6 @@ class BasicAttrFormatsTest extends FunSuite {
     assertResult(Right(Attribute("value", Text("3.14"), Null))) {
       DoubleXmlAttrFormat.write(3.14, "value")
     }
-    intercept[DeserializationException] {
-      DoubleXmlAttrFormat.read(Left(<value>3.14</value>))
-    }
   }
 
   test("string") {
@@ -96,9 +75,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("42"), Null))) {
       StringXmlAttrFormat.write("42", "value")
-    }
-    intercept[DeserializationException] {
-      StringXmlAttrFormat.read(Left(<value>42</value>))
     }
   }
 
@@ -112,9 +88,6 @@ class BasicAttrFormatsTest extends FunSuite {
     intercept[DeserializationException] {
       CharXmlAttrFormat.read(Right(Attribute("value", Text("ccccc"), Null)), "value")
     }
-    intercept[DeserializationException] {
-      CharXmlAttrFormat.read(Left(<value>c</value>))
-    }
   }
 
   test("symbol") {
@@ -123,9 +96,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("symbol"), Null))) {
       SymbolXmlAttrFormat.write('symbol, "value")
-    }
-    intercept[DeserializationException] {
-      SymbolXmlAttrFormat.read(Left(<value>symbol</value>))
     }
   }
 
@@ -136,9 +106,6 @@ class BasicAttrFormatsTest extends FunSuite {
     assertResult(Right(Attribute("value", Text("1234567891234567891234567890"), Null))) {
       BigIntXmlAttrFormat.write(BigInt("1234567891234567891234567890"), "value")
     }
-    intercept[DeserializationException] {
-      BigIntXmlAttrFormat.read(Left(<value>1234567891234567891234567890</value>))
-    }
   }
 
   test("bigdecimal") {
@@ -147,9 +114,6 @@ class BasicAttrFormatsTest extends FunSuite {
     }
     assertResult(Right(Attribute("value", Text("1234567891234567891234567890.123456789"), Null))) {
       BigDecimalXmlAttrFormat.write(BigDecimal("1234567891234567891234567890.123456789"), "value")
-    }
-    intercept[DeserializationException] {
-      BigDecimalXmlAttrFormat.read(Left(<value>1234567891234567891234567890.123456789</value>))
     }
   }
 }

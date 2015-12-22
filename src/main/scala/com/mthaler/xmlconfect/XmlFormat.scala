@@ -60,7 +60,7 @@ trait XmlAttrFormat[T] extends XmlFormat[T] with XmlAttrReader[T] with XmlAttrWr
 @implicitNotFound(msg = "Cannot find XmlElemReader or RootXmlFormat type class for ${T}")
 trait XmlElemReader[T] extends XmlReader[T] {
   final def read(xml: XML, name: String = ""): T = xml match {
-    case Left(node) => readElem(node, name)
+    case Left(tnode) => readElem(tnode.apply, name)
     case Right(metaData) => deserializationError("Reading attributes not supported")
   }
 
@@ -72,7 +72,7 @@ trait XmlElemReader[T] extends XmlReader[T] {
  */
 @implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
 trait XmlElemWriter[T] extends XmlWriter[T] {
-  final def write(obj: T, name: String = ""): XML = Left(writeElem(obj, name))
+  final def write(obj: T, name: String = ""): XML = Left(TNode.id(writeElem(obj, name)))
 
   protected def writeElem(obj: T, name: String = ""): Node = elem(name, Null, Seq(Text(obj.toString)))
 }

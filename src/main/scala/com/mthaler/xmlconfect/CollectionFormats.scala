@@ -10,9 +10,9 @@ object CollectionFormats {
    * Supplies the XmlElemFormat for lists.
    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
-    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toList
+    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toList
     protected override def writeElem(value: List[T], name: String = "") = {
-      val children = value.map(format.write(_).left.get)
+      val children = value.map(format.write(_).left.get.apply)
       elem(name, Null, children)
     }
   }
@@ -21,9 +21,9 @@ object CollectionFormats {
    * Supplies the XmlElemFormat for arrays.
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
-    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(elem)) } toArray
+    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toArray
     protected override def writeElem(value: Array[T], name: String = "") = {
-      val children = value.map(format.write(_).left.get)
+      val children = value.map(format.write(_).left.get.apply)
       elem(name, Null, children)
     }
   }
@@ -42,9 +42,9 @@ object CollectionFormats {
    * List => I.
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = new XmlElemFormat[I] {
-    protected def readElem(node: Node, name: String = "") = f(node.child.collect { case elem: Elem => format.read(Left(elem)) } toVector)
+    protected def readElem(node: Node, name: String = "") = f(node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toVector)
     protected override def writeElem(iterable: I, name: String = "") = {
-      val children = iterable.toVector.map(format.write(_).left.get)
+      val children = iterable.toVector.map(format.write(_).left.get.apply)
       elem(name, Null, children)
     }
   }

@@ -5,7 +5,7 @@ import scala.language.implicitConversions
 
 package object xmlconfect {
 
-  type XML = Either[Node, MetaData]
+  type XML = Either[TNode, MetaData]
 
   def deserializationError(msg: String, cause: Throwable = null, fieldNames: List[String] = Nil) = throw new DeserializationException(msg, cause, fieldNames)
   def serializationError(msg: String) = throw new SerializationException(msg)
@@ -28,14 +28,14 @@ package xmlconfect {
   private[xmlconfect] class PimpedElem(elem: Elem) {
 
     def convertTo[T](implicit reader: XmlElemReader[T]): T = {
-      reader.read(Left(elem))
+      reader.read(Left(TNode.id(elem)))
     }
   }
 
   private[xmlconfect] class PimpedAny[T](any: T) {
-    def toNode(implicit writer: XmlElemWriter[T]): Node = writer.write(any).left.get
+    def toNode(implicit writer: XmlElemWriter[T]): Node = writer.write(any).left.get.apply
 
-    def toNode(name: String)(implicit writer: XmlElemWriter[T]): Node = writer.write(any, name).left.get
+    def toNode(name: String)(implicit writer: XmlElemWriter[T]): Node = writer.write(any, name).left.get.apply
   }
 
   case class TNode(node: Node, transform: Node => Node) {

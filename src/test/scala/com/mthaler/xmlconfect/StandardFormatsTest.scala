@@ -22,7 +22,7 @@ class StandardFormatsTest extends FunSuite {
       f.write(None, "value")
     }
     intercept[DeserializationException] {
-      f.read(Left(<value>42</value>), "value")
+      f.read(Left(TNode.id(<value>42</value>)), "value")
     }
   }
 
@@ -39,7 +39,7 @@ class StandardFormatsTest extends FunSuite {
       f.write(None, "value")
     }
     intercept[DeserializationException] {
-      f.read(Left(<value>42</value>), "value")
+      f.read(Left(TNode.id(<value>42</value>)), "value")
     }
   }
 

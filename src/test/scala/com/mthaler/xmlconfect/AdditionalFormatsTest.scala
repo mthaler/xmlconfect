@@ -21,11 +21,11 @@ class AdditionalFormatsTest extends FunSuite {
     implicit val friendsFormat = AdditionalFormats.ignoreFormat(Friends(Nil))
     implicit val pf = xmlFormat2(Person)
 
-    assertResult(Left(<Person name="Albert Einstein"/>)) {
-      pf.write(p)
+    assertResult(<Person name="Albert Einstein"/>) {
+      pf.write(p).left.get.apply
     }
     assertResult(Person("Albert Einstein", Friends(Nil))) {
-      pf.read(Left(<Person name="Albert Einstein"/>))
+      pf.read(Left(TNode.id(<Person name="Albert Einstein"/>)))
     }
   }
 
@@ -48,7 +48,7 @@ class AdditionalFormatsTest extends FunSuite {
       format.write(42, "value")
     }
     intercept[DeserializationException] {
-      format.read(Left(<value>42</value>))
+      format.read(Left(TNode.id(<value>42</value>)))
     }
   }
 
@@ -66,7 +66,7 @@ class AdditionalFormatsTest extends FunSuite {
       format.write(42, "value")
     }
     intercept[DeserializationException] {
-      format.read(Left(<value>42</value>))
+      format.read(Left(TNode.id(<value>42</value>)))
     }
   }
 
@@ -96,17 +96,17 @@ class AdditionalFormatsTest extends FunSuite {
     val f = xmlFormat2(Car)
     val nf = namedFormat(f, "Test")
     val c = Car("Golf", "Volkswagen")
-    assertResult(Left(<Car name="Golf" manufacturer="Volkswagen"/>)) {
-      f.write(c)
+    assertResult(<Car name="Golf" manufacturer="Volkswagen"/>) {
+      f.write(c).left.get.apply
     }
     assertResult(Car("Golf", "Volkswagen")) {
-      f.read(Left(<Car name="Golf" manufacturer="Volkswagen"/>))
+      f.read(Left(TNode.id(<Car name="Golf" manufacturer="Volkswagen"/>)))
     }
-    assertResult(Left(<Test name="Golf" manufacturer="Volkswagen"/>)) {
-      nf.write(c)
+    assertResult(<Test name="Golf" manufacturer="Volkswagen"/>) {
+      nf.write(c).left.get.apply
     }
     assertResult(Car("Golf", "Volkswagen")) {
-      nf.read(Left(<Test name="Golf" manufacturer="Volkswagen"/>))
+      nf.read(Left(TNode.id(<Test name="Golf" manufacturer="Volkswagen"/>)))
     }
   }
 }
