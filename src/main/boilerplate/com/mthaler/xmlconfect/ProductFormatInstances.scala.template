@@ -8,11 +8,11 @@ import scala.util.Try
 object ProductFormatInstances {
 
 [# // Case classes with 1 parameters
-  def xmlFormat1[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T): XmlElemFormat[T] = {
+  def xmlFormat1[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T): SimpleXmlElemFormat[T] = {
     val Array([#p1#]) = extractFieldNames(classTag[T])
     xmlFormat(construct, [#p1#])
   }
-  def xmlFormat[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T, [#fieldName1: String#]): XmlElemFormat[T] = new XmlElemFormat[T]{
+  def xmlFormat[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T, [#fieldName1: String#]): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T]{
     protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
       [#fields ++= productElement##2Field[P1](fieldName1, p, 0)#

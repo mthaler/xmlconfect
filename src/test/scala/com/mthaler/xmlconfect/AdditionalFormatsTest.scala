@@ -71,10 +71,10 @@ class AdditionalFormatsTest extends FunSuite {
   }
 
   test("xmlElemFormatFromReaderWriter") {
-    val reader = new XmlElemReader[Int] {
+    val reader = new SimpleXmlElemReader[Int] {
       protected def readElem(node: Node, name: String = ""): Int = node.text.toInt
     }
-    val writer = new XmlElemWriter[Int] {}
+    val writer = new SimpleXmlElemWriter[Int] {}
     import AdditionalFormats.xmlElemFormat
     implicit val format = xmlElemFormat(reader, writer)
     assertResult(42) {

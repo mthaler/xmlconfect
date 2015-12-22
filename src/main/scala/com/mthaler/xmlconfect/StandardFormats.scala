@@ -26,7 +26,7 @@ object StandardFormats {
     }
   }
 
-  implicit def eitherFormat[A, B](implicit format1: XmlFormat[A], format2: XmlFormat[B]) = new XmlElemFormat[Either[A, B]] {
+  implicit def eitherFormat[A, B](implicit format1: XmlFormat[A], format2: XmlFormat[B]) = new SimpleXmlElemFormat[Either[A, B]] {
 
     protected def readElem(node: Node, name: String = "") = {
       val left = format1 match {
@@ -71,7 +71,7 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple1Format[A](implicit format1: XmlFormat[A]) = new XmlElemFormat[Tuple1[A]] {
+  implicit def tuple1Format[A](implicit format1: XmlFormat[A]) = new SimpleXmlElemFormat[Tuple1[A]] {
 
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
@@ -89,7 +89,7 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple2Format[A, B](implicit format1: XmlFormat[A], format2: XmlFormat[B]) = new XmlElemFormat[(A, B)] {
+  implicit def tuple2Format[A, B](implicit format1: XmlFormat[A], format2: XmlFormat[B]) = new SimpleXmlElemFormat[(A, B)] {
 
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
@@ -117,7 +117,7 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple3Format[A, B, C](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C]) = new XmlElemFormat[(A, B, C)] {
+  implicit def tuple3Format[A, B, C](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C]) = new SimpleXmlElemFormat[(A, B, C)] {
 
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {
@@ -153,7 +153,7 @@ object StandardFormats {
     }
   }
 
-  implicit def tuple4Format[A, B, C, D](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C], format4: XmlFormat[D]) = new XmlElemFormat[(A, B, C, D)] {
+  implicit def tuple4Format[A, B, C, D](implicit format1: XmlFormat[A], format2: XmlFormat[B], format3: XmlFormat[C], format4: XmlFormat[D]) = new SimpleXmlElemFormat[(A, B, C, D)] {
 
     protected def readElem(node: Node, name: String = "") = {
       val a = format1 match {

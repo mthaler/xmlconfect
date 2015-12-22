@@ -59,12 +59,13 @@ trait XmlAttrFormat[T] extends XmlFormat[T] with XmlAttrReader[T] with XmlAttrWr
  */
 @implicitNotFound(msg = "Cannot find XmlElemReader or RootXmlFormat type class for ${T}")
 trait XmlElemReader[T] extends XmlReader[T] {
+
   final def read(xml: XML, name: String = ""): T = xml match {
-    case Left(tnode) => readElem(tnode.apply, name)
+    case Left(tnode) => readElem(tnode, name)
     case Right(metaData) => deserializationError("Reading attributes not supported")
   }
 
-  protected def readElem(node: Node, name: String = ""): T
+  protected def readElem(tnode: TNode, name: String): T
 }
 
 /**
@@ -72,7 +73,30 @@ trait XmlElemReader[T] extends XmlReader[T] {
  */
 @implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
 trait XmlElemWriter[T] extends XmlWriter[T] {
-  final def write(obj: T, name: String = ""): XML = Left(TNode.id(writeElem(obj, name)))
+
+  final def write(obj: T, name: String = ""): XML = Left(writeElem0(obj, name))
+
+  protected def writeElem0(obj: T, name: String): TNode
+}
+
+/**
+ * A special XmlFormat signaling that the format produces an XML element.
+ */
+trait XmlElemFormat[T] extends XmlFormat[T] with XmlElemReader[T] with XmlElemWriter[T]
+
+trait SimpleXmlElemReader[T] extends XmlElemReader[T] {
+
+  protected final def readElem(tnode: TNode, name: String): T = readElem(tnode.apply, name)
+
+  protected def readElem(node: Node, name: String): T
+}
+
+/**
+ * A special XmlWriter capable of writing an XML element.
+ */
+@implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
+trait SimpleXmlElemWriter[T] extends XmlElemWriter[T] {
+  protected final def writeElem0(obj: T, name: String): TNode = TNode.id(writeElem(obj, name))
 
   protected def writeElem(obj: T, name: String = ""): Node = elem(name, Null, Seq(Text(obj.toString)))
 }
@@ -80,4 +104,4 @@ trait XmlElemWriter[T] extends XmlWriter[T] {
 /**
  * A special XmlFormat signaling that the format produces an XML element.
  */
-trait XmlElemFormat[T] extends XmlFormat[T] with XmlElemReader[T] with XmlElemWriter[T]
+trait SimpleXmlElemFormat[T] extends XmlElemFormat[T] with SimpleXmlElemReader[T] with SimpleXmlElemWriter[T]
