@@ -22,10 +22,10 @@ class AdditionalFormatsTest extends FunSuite {
     implicit val pf = xmlFormat2(Person)
 
     assertResult(<Person name="Albert Einstein"/>) {
-      pf.write(p).left.get.apply
+      p.toNode
     }
     assertResult(Person("Albert Einstein", Friends(Nil))) {
-      pf.read(Left(TNode.id(<Person name="Albert Einstein"/>)))
+      <Person name="Albert Einstein"/>.convertTo[Person]
     }
   }
 
