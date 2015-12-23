@@ -1,6 +1,8 @@
 package com.mthaler.xmlconfect
 
+import scala.reflect._
 import scala.xml.{ Null, MetaData, Node }
+import ProductFormat._
 
 object AdditionalFormats {
 
@@ -64,7 +66,10 @@ object AdditionalFormats {
 
     override protected def readElem(tnode: TNode, n: String): T = format.read(Left(TNode(tnode.node, transform)), name)
 
-    override protected def writeElem0(obj: T, n: String): TNode = format.write(obj, name).left.get
+    override protected def writeElem0(obj: T, n: String): TNode = {
+
+      format.write(obj, name).left.get
+    }
   }
 
 }

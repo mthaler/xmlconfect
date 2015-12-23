@@ -6,9 +6,8 @@ import ProductFormat._
 import scala.xml._
 
 object AdditionalFormatsTest {
-  case class Friend(friend: String)
-  case class Friends(friends: List[Friend])
-  case class Person(name: String, friends: Friends)
+  case class Friend(name: String)
+  case class Person(name: String, friends: List[Friend])
 }
 
 class AdditionalFormatsTest extends FunSuite {
@@ -18,14 +17,14 @@ class AdditionalFormatsTest extends FunSuite {
   test("ignoreFormat") {
 
     import BasicAttrFormats._
-    val p = Person("Albert Einstein", Friends(List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac"))))
-    implicit val friendsFormat = AdditionalFormats.ignoreFormat(Friends(Nil))
+    val p = Person("Albert Einstein", List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac")))
+    implicit val friendsFormat = AdditionalFormats.ignoreFormat(List.empty[Friend])
     implicit val pf = xmlFormat2(Person)
 
     assertResult(<Person name="Albert Einstein"/>) {
       p.toNode
     }
-    assertResult(Person("Albert Einstein", Friends(Nil))) {
+    assertResult(Person("Albert Einstein", List.empty[Friend])) {
       <Person name="Albert Einstein"/>.convertTo[Person]
     }
   }
@@ -90,13 +89,17 @@ class AdditionalFormatsTest extends FunSuite {
   }
 
   test("namedFormat") {
-    import BasicElemFormats._
-    import CollectionFormats._
+    import BasicAttrFormats._
     import ProductFormat._
-    implicit val friendFOrmat = xmlFormat1(Friend)
-    implicit val friendsFormat = xmlFormat1(Friends)
+    implicit val friendFormat = xmlFormat1(Friend)
+    implicit val friendsFormat = AdditionalFormats.namedFormat(CollectionFormats.listFormat[Friend], "Buddies", n => (n \ "Buddies").head)
     implicit val f = xmlFormat2(Person)
-    val p = Person("Albert Einstein", Friends(List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac"))))
-    println(p.toNode)
+    val p = Person("Albert Einstein", List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac")))
+    assertResult(<Person name="Albert Einstein"><Buddies><Friend name="Richard Feynman"/><Friend name="Werner Heisenberg"/><Friend name="Paul Dirac"/></Buddies></Person>) {
+      p.toNode
+    }
+    assertResult(p) {
+      <Person name="Albert Einstein"><Buddies><Friend name="Richard Feynman"/><Friend name="Werner Heisenberg"/><Friend name="Paul Dirac"/></Buddies></Person>.convertTo[Person]
+    }
   }
 }
