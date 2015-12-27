@@ -116,4 +116,14 @@ class BasicAttrFormatsTest extends FunSuite {
       BigDecimalXmlAttrFormat.write(BigDecimal("1234567891234567891234567890.123456789"), "value")
     }
   }
+
+  test("enum") {
+    val f = enumFormat[Day]
+    assertResult(Day.MONDAY) {
+      f.read(Right(Attribute("value", Text("MONDAY"), Null)), "value")
+    }
+    assertResult(Right(Attribute("value", Text("MONDAY"), Null))) {
+      f.write(Day.MONDAY, "value")
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package com.mthaler.xmlconfect
 
+import scala.reflect._
 import scala.xml.MetaData
 
 /**
@@ -57,5 +58,12 @@ object BasicAttrFormats {
   implicit object SymbolXmlAttrFormat extends XmlAttrFormat[Symbol] {
     protected def readAttr(metaData: MetaData, name: String = ""): Symbol = Symbol(metaData(name).text)
     protected override def writeAttr(obj: Symbol, name: String = ""): MetaData = attribute(name, obj.name)
+  }
+
+  implicit def enumFormat[T <: Enum[T]: ClassTag] = new XmlAttrFormat[Enum[T]] {
+    protected def readAttr(metaData: MetaData, name: String = ""): Enum[T] = {
+      val c = classTag[T].runtimeClass.asInstanceOf[Class[T]]
+      Enum.valueOf(c, metaData(name).text)
+    }
   }
 }
