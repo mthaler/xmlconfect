@@ -1,5 +1,6 @@
 package com.mthaler.xmlconfect
 
+import scala.reflect._
 import scala.xml.{ Node, Null, Text }
 
 /**
@@ -57,5 +58,12 @@ object BasicElemFormats {
 
   implicit object BigDecimalXmlElemFormat extends SimpleXmlElemFormat[BigDecimal] {
     protected def readElem(node: Node, name: String = ""): BigDecimal = BigDecimal(node.text)
+  }
+
+  implicit def enumFormat[T <: Enum[T]: ClassTag] = new SimpleXmlElemFormat[Enum[T]] {
+    protected def readElem(node: Node, name: String = ""): Enum[T] = {
+      val c = classTag[T].runtimeClass.asInstanceOf[Class[T]]
+      Enum.valueOf(c, node.text)
+    }
   }
 }

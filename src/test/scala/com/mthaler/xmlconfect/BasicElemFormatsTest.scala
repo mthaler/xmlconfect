@@ -152,4 +152,17 @@ class BasicElemFormatsTest extends FunSuite {
       BigDecimalXmlElemFormat.read(Right(Attribute("value", Text("1234567891234567891234567890.123456789"), Null)))
     }
   }
+
+  test("enum") {
+    implicit val f = enumFormat[Day].asInstanceOf[XmlElemFormat[Enum[Day]]]
+    assertResult(Day.MONDAY) {
+      <value>MONDAY</value>.convertTo[Enum[Day]](f)
+    }
+    assertResult(<value>MONDAY</value>) {
+      Day.MONDAY.toNode("value")(f.asInstanceOf[XmlElemWriter[Day]])
+    }
+    intercept[DeserializationException] {
+      f.read(Right(Attribute("value", Text("MONDAY"), Null)))
+    }
+  }
 }
