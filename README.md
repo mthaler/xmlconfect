@@ -78,3 +78,30 @@ creates a new person instance and calls the `toNode` method to serialize it to X
 <Person name="Albert Einstein" age="42"/>.convertTo[Person]
 ```
 deserializes a class. Again, instead of using implicits, we could pass the format directly using `<Person name="Albert Einstein" age="42"/>.convertTo[Person](f)`.
+
+###Elements and Attriutes
+XML offers two ways to store data: elements and attributes. In the above example we used attributes to store the name and the age. But we could also use child elements to store them. _xmlconfect_ supports both:
+
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicElemFormats._
+import com.mthaler.xmlconfect.ProductFormatInstances._
+implicit val f = xmlFormat2(Person)
+val p = Person("Albert Einstein", 42)
+p.toNode
+```
+This will create an XML element with two children, name and age:
+
+```xml
+<Person><name>Albert Einstein</name><age>42</age></Person>
+```
+The only difference is, that we import `com.mthaler.xmlconfect.BasicElemFormats._` instead of `com.mthaler.xmlconfect.BasicAttrFormats._`. To deserialize the class, we do
+
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicElemFormats._
+import com.mthaler.xmlconfect.ProductFormatInstances._
+implicit val f = xmlFormat2(Person)
+<Person><name>Albert Einstein</name><age>42</age></Person>.convertTo[Person]
+```
+Again, the only difference is that we import `com.mthaler.xmlconfect.BasicElemFormats._` instead of `com.mthaler.xmlconfect.BasicAttrFormats._`.
