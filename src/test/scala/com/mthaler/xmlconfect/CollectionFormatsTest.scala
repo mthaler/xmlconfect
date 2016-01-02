@@ -82,4 +82,44 @@ class CollectionFormatsTest extends FunSuite {
       <Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>.convertTo[Persons]
     }
   }
+
+  test("countImmIterable") {
+    import BasicAttrFormats._
+    import collection.immutable.Iterable
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = CollectionFormats.immIterableFormat[Count]
+    val l = Iterable(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Iterable[Count]]
+    }
+    assertResult(<Counts/>) {
+      Iterable.empty[Count].toNode("Counts")
+    }
+    assertResult(Vector.empty[Count]) {
+      <Counts/>.convertTo[Iterable[Count]]
+    }
+  }
+
+  test("countImmSeq") {
+    import BasicAttrFormats._
+    import collection.immutable.Seq
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = CollectionFormats.immSeqFormat[Count]
+    val l = Seq(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Seq[Count]]
+    }
+    assertResult(<Counts/>) {
+      Seq.empty[Count].toNode("Counts")
+    }
+    assertResult(Seq.empty[Count]) {
+      <Counts/>.convertTo[Seq[Count]]
+    }
+  }
 }
