@@ -122,4 +122,64 @@ class CollectionFormatsTest extends FunSuite {
       <Counts/>.convertTo[Seq[Count]]
     }
   }
+
+  test("countImmIndexedSeq") {
+    import BasicAttrFormats._
+    import collection.immutable.IndexedSeq
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = CollectionFormats.immIndexedSeqFormat[Count]
+    val l = IndexedSeq(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[IndexedSeq[Count]]
+    }
+    assertResult(<Counts/>) {
+      IndexedSeq.empty[Count].toNode("Counts")
+    }
+    assertResult(IndexedSeq.empty[Count]) {
+      <Counts/>.convertTo[IndexedSeq[Count]]
+    }
+  }
+
+  test("countImmLinearSeq") {
+    import BasicAttrFormats._
+    import collection.immutable.LinearSeq
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = CollectionFormats.immLinearSeqFormat[Count]
+    val l = LinearSeq(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[LinearSeq[Count]]
+    }
+    assertResult(<Counts/>) {
+      LinearSeq.empty[Count].toNode("Counts")
+    }
+    assertResult(LinearSeq.empty[Count]) {
+      <Counts/>.convertTo[LinearSeq[Count]]
+    }
+  }
+
+  test("countImmSet") {
+    import BasicAttrFormats._
+    import collection.immutable.Set
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = CollectionFormats.immSetFormat[Count]
+    val l = Set(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Set[Count]]
+    }
+    assertResult(<Counts/>) {
+      Set.empty[Count].toNode("Counts")
+    }
+    assertResult(Set.empty[Count]) {
+      <Counts/>.convertTo[Set[Count]]
+    }
+  }
 }
