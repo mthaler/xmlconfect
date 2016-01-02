@@ -153,8 +153,23 @@ persons.toNode("Persons")
 ```
 We have to use the overloaded version here, otherwise the top-level element will have an empty name which is not valid XML.
 
+#Renaming elements
+It is sometimes necessary to rename elements, e.g. we have a list of Integer classes, but want to rename Integer to Int in the resulting XML. This is easy to do with _xmlconfect_:
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicAttrFormats._
+import com.mthaler.xmlconfect.ProductFormat._
+implicit val namedIntFormat = AdditionalFormats.namedFormat(xmlFormat1(Integer), "Int")
+implicit val intListFomat = CollectionFormats.listFormat[Integer]
+List(Integer(5), Integer(10), Integer(15)).toNode("Integers")
+```
+The result is:
+```xml
+<Integers><Int value="5"/><Int value="10"/><Int value="15"/></Integers>
+```
+
 ##Credits
 Most of the code is inspired by (or just copied from) the excellent [spray-json](https://github.com/spray/spray-json) library.
 
-###License
+##License
 xmlconfect is licensed under [APL 2.0](http://www.apache.org/licenses/LICENSE-2.0).
