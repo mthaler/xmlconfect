@@ -113,11 +113,13 @@ object ProductFormat {
 
   def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply }
 
-  def xmlFormat1[P1: XF, T <: Product: ClassTag](construct: (P1) => T): SimpleXmlElemFormat[T] = {
+  // just for testing product formats, so we make them package private
+  // the actual product formats are generated using boilerplate when building the project
+  private[xmlconfect] def xmlFormat1[P1: XF, T <: Product: ClassTag](construct: (P1) => T): SimpleXmlElemFormat[T] = {
     val Array(p1) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1)
   }
-  def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] {
+  private[xmlconfect] def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] {
     protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
       fields.sizeHint(1 * 2)
@@ -136,11 +138,11 @@ object ProductFormat {
     }
   }
 
-  def xmlFormat2[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T): SimpleXmlElemFormat[T] = {
+  private[xmlconfect] def xmlFormat2[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T): SimpleXmlElemFormat[T] = {
     val Array(p1, p2) = extractFieldNames(classTag[T])
     xmlFormat(construct, p1, p2)
   }
-  def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] {
+  private[xmlconfect] def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] {
     protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
       fields.sizeHint(2 * 3)
