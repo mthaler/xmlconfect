@@ -105,3 +105,42 @@ implicit val f = xmlFormat2(Person)
 <Person><name>Albert Einstein</name><age>42</age></Person>.convertTo[Person]
 ```
 Again, the only difference is that we import `com.mthaler.xmlconfect.BasicElemFormats._` instead of `com.mthaler.xmlconfect.BasicAttrFormats._`.
+
+###Collections
+It is quite common to serialize / deserialize collections of objects. It is easy to do this using _xmlconfect_:
+
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicAttrFormats._
+import com.mthaler.xmlconfect.ProductFormatInstances._
+import com.mthaler.xmlconfect.CollectionFormats.listFormat
+implicit val f = xmlFormat2(Person)
+val persons = List(Person("Albert Einstein", 42), Person("Richard Feyman", 28))
+persons.toNode("Persons")
+```
+The result is
+```xml
+<Persons><Person name="Albert Einstein" age="42"/><Person name="Richard Feyman" age="28"/></Persons>
+```
+
+It is just as easy to deserialize the persons list:
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicAttrFormats._
+import com.mthaler.xmlconfect.ProductFormatInstances._
+import com.mthaler.xmlconfect.CollectionFormats.listFormat
+implicit val f = xmlFormat2(Person)
+<Persons>
+  <Person name="Albert Einstein" age="42"/>
+  <Person name="Richard Feyman" age="28"/>
+</Persons>.convertTo[List[Person]]
+```
+In addition to the formats used to serialize / deserialize a person instance, we now import `com.mthaler.xmlconfect.CollectionFormats.listFormat` which offers a format to serialize / deserialize lists. There are formats for several collection types:
+* List
+* Array
+* immutable Iterable
+* immutable Seq
+* immutable IndexedSeq
+* immutable LinearSeq
+* immutable Set
+* Vector
