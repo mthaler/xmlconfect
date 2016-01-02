@@ -13,7 +13,7 @@ It sports the following features:
 ## Installation
 
 ## Usage
-xmlconfect is really easy to use:
+_xmlconfect_ is really easy to use. In the following we show how to serialize / deserialize a simple class `case class Person(name: String, age: Int)`:
 
 ```scala
 import com.mthaler.xmlconfect._
@@ -105,6 +105,27 @@ implicit val f = xmlFormat2(Person)
 <Person><name>Albert Einstein</name><age>42</age></Person>.convertTo[Person]
 ```
 Again, the only difference is that we import `com.mthaler.xmlconfect.BasicElemFormats._` instead of `com.mthaler.xmlconfect.BasicAttrFormats._`.
+
+###Default values
+Sometimes we need to provide default values if e.g. an attribute is not present in XML. This could be the case if we save a config as XML and than read the config with a newer version of the program that added an aditional field to a class. For case classes, it is possible to use case class default values for missing attributes / elements. If we change our Person class to `case class Person(name: String = "Name", age: Int = 21)`
+
+the following code
+
+```scala
+import com.mthaler.xmlconfect._
+import com.mthaler.xmlconfect.BasicAttrFormats._
+import com.mthaler.xmlconfect.ProductFormatInstances._
+implicit val f = xmlFormat2(Person)
+<Person name="Albert Einstein"/>.convertTo[Person]
+```
+
+will result in 
+
+```scala
+Person(Albert Einstein, 21)
+```
+
+__Important:___ this will only work if default values are specified for all fields of a case class.
 
 ###Collections
 It is quite common to serialize / deserialize collections of objects. It is easy to do this using _xmlconfect_:
