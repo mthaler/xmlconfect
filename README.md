@@ -152,3 +152,9 @@ val persons = List(Person("Albert Einstein", 42), Person("Richard Feyman", 28))
 persons.toNode("Persons")
 ```
 We have to use the overloaded version here, otherwise the top-level element will have an empty name which is not valid XML.
+
+##Credits
+Most of the code is inspired by (or just copied from) the excellent [spray-json](https://github.com/spray/spray-json) library.
+
+###License
+xmlconfect is licensed under [APL 2.0](http://www.apache.org/licenses/LICENSE-2.0).
