@@ -136,6 +136,7 @@ implicit val f = xmlFormat2(Person)
 </Persons>.convertTo[List[Person]]
 ```
 In addition to the formats used to serialize / deserialize a person instance, we now import `com.mthaler.xmlconfect.CollectionFormats.listFormat` which offers a format to serialize / deserialize lists. There are formats for several collection types:
+
 * List
 * Array
 * immutable Iterable
@@ -144,3 +145,10 @@ In addition to the formats used to serialize / deserialize a person instance, we
 * immutable LinearSeq
 * immutable Set
 * Vector
+
+There is an overloaded version of toNode that allows us to specify a name for the element:
+```scala
+val persons = List(Person("Albert Einstein", 42), Person("Richard Feyman", 28))
+persons.toNode("Persons")
+```
+We have to use the overloaded version here, otherwise the top-level element will have an empty name which is not valid XML.
