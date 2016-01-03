@@ -212,6 +212,19 @@ implicit object ColorElemFormat extends SimpleXmlElemFormat[Color] {
 ```
 `Color.red.toNode("Color")` would then result in `<Color r="255" g="0" b="0"/>` and `<Color r="255" g="0" b="0"/>.convertTo[Color]` would create a Color object representing the color red.
 
+It is just as easy to define an attribute format for `java.awt.Color`:
+
+```scala
+import com.mthaler.xmlconfect._
+import java.awt.Color
+import scala.xml.MetaData
+
+implicit object ColorXmlAttrFormat extends XmlAttrFormat[Color] {
+  protected def readAttr(metaData: MetaData, name: String = ""): Color = new Color(metaData(name).text.toInt)
+  protected override def writeAttr(color: Color, name: String = ""): MetaData = attribute(name, color.getRGB.toString)
+}
+```
+
 ##Credits
 Most of the code is inspired by (or just copied from) the excellent [spray-json](https://github.com/spray/spray-json) library.
 
