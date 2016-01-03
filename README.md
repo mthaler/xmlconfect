@@ -207,7 +207,8 @@ implicit object ColorElemFormat extends SimpleXmlElemFormat[Color] {
       new Color(r, g, b)
     }
     protected override def writeElem(color: Color, name: String = ""): Node = 
-    <Color r={ color.getRed.toString } g={ color.getGreen.toString } b={ color.getBlue.toString }/>.copy(label = name)
+    <Color r={ color.getRed.toString } g={ color.getGreen.toString } 
+      b={ color.getBlue.toString }/>.copy(label = name)
   }
 ```
 `Color.red.toNode("Color")` would then result in `<Color r="255" g="0" b="0"/>` and `<Color r="255" g="0" b="0"/>.convertTo[Color]` would create a Color object representing the color red.
