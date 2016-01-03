@@ -220,8 +220,11 @@ import java.awt.Color
 import scala.xml.MetaData
 
 implicit object ColorXmlAttrFormat extends XmlAttrFormat[Color] {
-  protected def readAttr(metaData: MetaData, name: String = ""): Color = new Color(metaData(name).text.toInt)
-  protected override def writeAttr(color: Color, name: String = ""): MetaData = attribute(name, color.getRGB.toString)
+  protected def readAttr(metaData: MetaData, name: String = ""): Color = 
+    new Color(metaData(name).text.toInt)
+    
+  protected override def writeAttr(color: Color, name: String = ""): MetaData = 
+    attribute(name, color.getRGB.toString)
 }
 ```
 
