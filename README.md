@@ -174,7 +174,7 @@ persons.toNode("Persons")
 ```
 We have to use the overloaded version here, otherwise the top-level element will have an empty name which is not valid XML.
 
-#Renaming elements
+###Renaming elements
 It is sometimes necessary to rename elements, e.g. we have a list of Integer classes, but want to rename Integer to Int in the resulting XML. This is easy to do with _xmlconfect_:
 ```scala
 import com.mthaler.xmlconfect._
@@ -188,6 +188,29 @@ The result is:
 ```xml
 <Integers><Int value="5"/><Int value="10"/><Int value="15"/></Integers>
 ```
+### Custom classes
+
+It is easy to define custom formats with _xmlconfect_. To serialize / deserialize `java.awt.Color` we could use the following format:
+
+```scala
+import com.mthaler.xmlconfect._
+import java.awt.Color
+import scala.xml.Node
+import scala.xml.Null
+import scala.xml.Text
+
+implicit object ColorElemFormat extends SimpleXmlElemFormat[Color] {
+    protected def readElem(node: Node, name: String = ""): Color = {
+      val r = (node \ "@r").text.toInt
+      val g = (node \ "@g").text.toInt
+      val b = (node \ "@b").text.toInt
+      new Color(r, g, b)
+    }
+    protected override def writeElem(color: Color, name: String = ""): Node = <Color r={ color.getRed.toString } 
+    g={ color.getGreen.toString } b={ color.getBlue.toString }/>
+  }
+```
+`Color.red.toNode("Color")` would then result in `<Color r="255" g="0" b="0"/>` and `<Color r="255" g="0" b="0"/>.convertTo[Color]` would create a Color object representing the color red.
 
 ##Credits
 Most of the code is inspired by (or just copied from) the excellent [spray-json](https://github.com/spray/spray-json) library.
