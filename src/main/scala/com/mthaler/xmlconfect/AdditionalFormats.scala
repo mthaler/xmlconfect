@@ -17,7 +17,7 @@ object AdditionalFormats {
   }
 
   /**
-   * Constructs a XmlFormat from its two parts, JsonReader and JsonWriter.
+   * Constructs a XmlFormat from its two parts, XmlReader and XmlWriter.
    */
   def xmlFormat[T](reader: XmlReader[T], writer: XmlWriter[T]) = new XmlFormat[T] {
 

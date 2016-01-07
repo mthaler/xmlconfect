@@ -71,7 +71,7 @@ trait XmlElemReader[T] extends XmlReader[T] {
 /**
  * A special XmlWriter capable of writing an XML element.
  */
-@implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
+@implicitNotFound(msg = "Cannot find XmlElemWriter or XmlElemFormat type class for ${T}")
 trait XmlElemWriter[T] extends XmlWriter[T] {
 
   final def write(obj: T, name: String = ""): XML = Left(writeElem0(obj, name))
@@ -94,7 +94,7 @@ trait SimpleXmlElemReader[T] extends XmlElemReader[T] {
 /**
  * A special XmlWriter capable of writing an XML element.
  */
-@implicitNotFound(msg = "Cannot find XmlElemWriter or RootJsonFormat type class for ${T}")
+@implicitNotFound(msg = "Cannot find XmlElemWriter or XmlElemFormat type class for ${T}")
 trait SimpleXmlElemWriter[T] extends XmlElemWriter[T] {
   protected final def writeElem0(obj: T, name: String): TNode = TNode.id(writeElem(obj, name))
 

@@ -32,7 +32,7 @@ object ProductFormat {
       fields.map(f => ProductFormat.unmangle(f.getName))
     } catch {
       case NonFatal(ex) => throw new RuntimeException("Cannot automatically determine case class field names and order " +
-        "for '" + clazz.getName + "', please use the 'jsonFormat' overload with explicit field name specification", ex)
+        "for '" + clazz.getName + "', please use the 'xmlFormat' overload with explicit field name specification", ex)
     }
   }
 
