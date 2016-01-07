@@ -66,4 +66,6 @@ object BasicElemFormats {
       Enum.valueOf(c, node.text)
     }
   }
+
+  implicit def wrappedElemFormat[T](format: XmlElemFormat[_]) = format.asInstanceOf[XmlElemFormat[T]]
 }

@@ -154,12 +154,12 @@ class BasicElemFormatsTest extends FunSuite {
   }
 
   test("enum") {
-    implicit val f = enumFormat[Day].asInstanceOf[XmlElemFormat[Enum[Day]]]
+    implicit val f = wrappedElemFormat[Day](enumFormat[Day])
     assertResult(Day.MONDAY) {
-      <value>MONDAY</value>.convertTo[Enum[Day]](f)
+      <value>MONDAY</value>.convertTo[Enum[Day]]
     }
     assertResult(<value>MONDAY</value>) {
-      Day.MONDAY.toNode("value")(f.asInstanceOf[XmlElemWriter[Day]])
+      Day.MONDAY.toNode("value")
     }
     intercept[DeserializationException] {
       f.read(Right(Attribute("value", Text("MONDAY"), Null)))
