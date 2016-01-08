@@ -60,12 +60,10 @@ object BasicAttrFormats {
     protected override def writeAttr(obj: Symbol, name: String = ""): MetaData = attribute(name, obj.name)
   }
 
-  implicit def enumFormat[T <: Enum[T]: ClassTag] = new XmlAttrFormat[Enum[T]] {
-    protected def readAttr(metaData: MetaData, name: String = ""): Enum[T] = {
+  implicit def enumFormat[T <: Enum[T]: ClassTag] = new XmlAttrFormat[T] {
+    protected def readAttr(metaData: MetaData, name: String = ""): T = {
       val c = classTag[T].runtimeClass.asInstanceOf[Class[T]]
       Enum.valueOf(c, metaData(name).text)
     }
   }
-
-  implicit def wrappedAttrFormat[T](format: XmlAttrFormat[_]) = format.asInstanceOf[XmlAttrFormat[T]]
 }

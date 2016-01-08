@@ -154,9 +154,9 @@ class BasicElemFormatsTest extends FunSuite {
   }
 
   test("enum") {
-    implicit val f = wrappedElemFormat[Day](enumFormat[Day])
+    implicit val f = enumFormat[Day]
     assertResult(Day.MONDAY) {
-      <value>MONDAY</value>.convertTo[Enum[Day]]
+      <value>MONDAY</value>.convertTo[Day]
     }
     assertResult(<value>MONDAY</value>) {
       Day.MONDAY.toNode("value")

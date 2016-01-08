@@ -60,12 +60,10 @@ object BasicElemFormats {
     protected def readElem(node: Node, name: String = ""): BigDecimal = BigDecimal(node.text)
   }
 
-  implicit def enumFormat[T <: Enum[T]: ClassTag] = new SimpleXmlElemFormat[Enum[T]] {
-    protected def readElem(node: Node, name: String = ""): Enum[T] = {
+  implicit def enumFormat[T <: Enum[T]: ClassTag] = new SimpleXmlElemFormat[T] {
+    protected def readElem(node: Node, name: String = ""): T = {
       val c = classTag[T].runtimeClass.asInstanceOf[Class[T]]
       Enum.valueOf(c, node.text)
     }
   }
-
-  implicit def wrappedElemFormat[T](format: XmlElemFormat[_]) = format.asInstanceOf[XmlElemFormat[T]]
 }
