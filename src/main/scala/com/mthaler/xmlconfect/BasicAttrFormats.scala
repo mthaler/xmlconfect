@@ -66,4 +66,6 @@ object BasicAttrFormats {
       Enum.valueOf(c, metaData(name).text)
     }
   }
+
+  implicit def wrappedAttrFormat[T](format: XmlAttrFormat[_]) = format.asInstanceOf[XmlAttrFormat[T]]
 }
