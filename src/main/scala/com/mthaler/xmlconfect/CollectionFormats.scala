@@ -12,7 +12,7 @@ object CollectionFormats {
    */
   implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
 
-    override protected def readElem(node: TNode, name: String): List[T] = node.apply.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toList
+    override protected def readElem(node: TNode, name: String): List[T] = node.node flatMap (n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toList
 
     override protected def writeElem0(value: List[T], name: String): TNode = TNode.id(value.flatMap(format.write(_).left.get.apply))
   }
@@ -22,7 +22,7 @@ object CollectionFormats {
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
 
-    override protected def readElem(node: TNode, name: String): Array[T] = node.apply.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toArray
+    override protected def readElem(node: TNode, name: String): Array[T] = node.node.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toArray
 
     override protected def writeElem0(value: Array[T], name: String): TNode = TNode.id(value.toSeq.flatMap(format.write(_).left.get.apply))
   }

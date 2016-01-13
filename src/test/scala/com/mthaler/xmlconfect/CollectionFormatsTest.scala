@@ -1,5 +1,6 @@
 package com.mthaler.xmlconfect
 
+import com.mthaler.xmlconfect.CollectionFormatsTest.Count
 import org.scalatest.FunSuite
 
 object CollectionFormatsTest {
@@ -9,25 +10,6 @@ object CollectionFormatsTest {
 class CollectionFormatsTest extends FunSuite {
 
   import CollectionFormatsTest._
-
-  test("countList") {
-    import BasicAttrFormats._
-    implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = WrappedCollectionFormats.listFormat[Count]
-    val l = List(Count(5), Count(8), Count(42))
-    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
-      l.toNode("Counts")
-    }
-    assertResult(l) {
-      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[List[Count]]
-    }
-    assertResult(<Counts/>) {
-      List.empty[Count].toNode("Counts")
-    }
-    assertResult(Nil) {
-      <Counts/>.convertTo[List[Count]]
-    }
-  }
 
   test("hobbyList") {
     case class Hobby(name: String)
@@ -41,27 +23,8 @@ class CollectionFormatsTest extends FunSuite {
     assertResult(<Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/></Person>) {
       p.toNode
     }
-    //    assertResult(p) {
-    //      <Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/></Person>.convertTo[Person]
-    //    }
-  }
-
-  test("countArray") {
-    import BasicAttrFormats._
-    implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = WrappedCollectionFormats.arrayFormat[Count]
-    val l = Array(Count(5), Count(8), Count(42))
-    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
-      l.toNode("Counts")
-    }
-    assertResult(l) {
-      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Array[Count]]
-    }
-    assertResult(<Counts/>) {
-      Array.empty[Count].toNode("Counts")
-    }
-    assertResult(Array.empty[Count]) {
-      <Counts/>.convertTo[Array[Count]]
+    assertResult(p) {
+      <Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/></Person>.convertTo[Person]
     }
   }
 
@@ -199,4 +162,46 @@ class CollectionFormatsTest extends FunSuite {
       <Counts/>.convertTo[Set[Count]]
     }
   }
+}
+
+class WrappedCollectionFormatsTest extends FunSuite {
+
+  test("countList") {
+    import BasicAttrFormats._
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = WrappedCollectionFormats.listFormat[Count]
+    val l = List(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[List[Count]]
+    }
+    assertResult(<Counts/>) {
+      List.empty[Count].toNode("Counts")
+    }
+    assertResult(Nil) {
+      <Counts/>.convertTo[List[Count]]
+    }
+  }
+
+  test("countArray") {
+    import BasicAttrFormats._
+    implicit val f = ProductFormat.xmlFormat1(Count)
+    implicit val lf = WrappedCollectionFormats.arrayFormat[Count]
+    val l = Array(Count(5), Count(8), Count(42))
+    assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
+      l.toNode("Counts")
+    }
+    assertResult(l) {
+      <Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>.convertTo[Array[Count]]
+    }
+    assertResult(<Counts/>) {
+      Array.empty[Count].toNode("Counts")
+    }
+    assertResult(Array.empty[Count]) {
+      <Counts/>.convertTo[Array[Count]]
+    }
+  }
+
 }
