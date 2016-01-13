@@ -13,7 +13,7 @@ object CollectionFormats {
     protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toList
     protected override def writeElem(value: List[T], name: String = "") = {
       val children = value.map(format.write(_).left.get.apply)
-      elem(name, Null, children)
+      elem(name, Null, children.flatten)
     }
   }
 
@@ -24,7 +24,7 @@ object CollectionFormats {
     protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toArray
     protected override def writeElem(value: Array[T], name: String = "") = {
       val children = value.map(format.write(_).left.get.apply)
-      elem(name, Null, children)
+      elem(name, Null, children.flatten.toSeq)
     }
   }
 
@@ -45,7 +45,7 @@ object CollectionFormats {
     protected def readElem(node: Node, name: String = "") = f(node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toVector)
     protected override def writeElem(iterable: I, name: String = "") = {
       val children = iterable.toVector.map(format.write(_).left.get.apply)
-      elem(name, Null, children)
+      elem(name, Null, children.flatten)
     }
   }
 }

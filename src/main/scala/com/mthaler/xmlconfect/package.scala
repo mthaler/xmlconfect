@@ -21,6 +21,9 @@ package object xmlconfect {
 }
 
 package xmlconfect {
+
+  import scala.xml.NodeSeq
+
   case class DeserializationException(msg: String, cause: Throwable = null, fieldNames: List[String] = Nil) extends RuntimeException(msg, cause)
 
   class SerializationException(msg: String) extends RuntimeException(msg)
@@ -33,19 +36,19 @@ package xmlconfect {
   }
 
   private[xmlconfect] class PimpedAny[T](any: T) {
-    def toNode(implicit writer: XmlElemWriter[T]): Node = writer.write(any).left.get.apply
+    def toNode(implicit writer: XmlElemWriter[T]): NodeSeq = writer.write(any).left.get.apply
 
-    def toNode(name: String)(implicit writer: XmlElemWriter[T]): Node = writer.write(any, name).left.get.apply
+    def toNode(name: String)(implicit writer: XmlElemWriter[T]): NodeSeq = writer.write(any, name).left.get.apply
   }
 
-  case class TNode(node: Node, transform: Node => Node) {
+  case class TNode(node: NodeSeq, transform: NodeSeq => NodeSeq) {
 
     /**
      * Applies the given transformation to the node
      *
      * @return transformed node
      */
-    def apply: Node = transform(node)
+    def apply: NodeSeq = transform(node)
   }
 
   object TNode {

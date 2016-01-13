@@ -1,8 +1,6 @@
 package com.mthaler.xmlconfect
 
-import scala.reflect._
-import scala.xml.{ Null, MetaData, Node }
-import ProductFormat._
+import scala.xml.{ NodeSeq, Null, MetaData }
 
 object AdditionalFormats {
 
@@ -53,7 +51,7 @@ object AdditionalFormats {
     override protected def writeElem0(obj: T, n: String): TNode = format.write(obj, name).left.get
   }
 
-  def namedFormat[T](format: XmlElemFormat[T], name: String, transform: Node => Node) = new XmlElemFormat[T] {
+  def namedFormat[T](format: XmlElemFormat[T], name: String, transform: NodeSeq => NodeSeq) = new XmlElemFormat[T] {
 
     override protected def readElem(tnode: TNode, n: String): T = format.read(Left(TNode(tnode.node, transform)), name)
 

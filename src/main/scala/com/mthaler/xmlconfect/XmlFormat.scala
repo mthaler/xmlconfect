@@ -86,7 +86,7 @@ trait XmlElemFormat[T] extends XmlFormat[T] with XmlElemReader[T] with XmlElemWr
 
 trait SimpleXmlElemReader[T] extends XmlElemReader[T] {
 
-  protected final def readElem(tnode: TNode, name: String): T = readElem(tnode.apply, name)
+  protected final def readElem(tnode: TNode, name: String): T = readElem(tnode.apply.head, name)
 
   protected def readElem(node: Node, name: String): T
 }

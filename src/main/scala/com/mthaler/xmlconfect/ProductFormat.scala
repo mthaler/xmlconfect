@@ -4,6 +4,7 @@ import scala.annotation.tailrec
 import scala.reflect.{ ClassTag, classTag }
 import scala.util.control.NonFatal
 import scala.xml.{ MetaData, Node, Null }
+import scala.language.postfixOps
 
 /**
  * Provides the helpers for constructing custom XmlFormat implementations for types implementing the Product trait
@@ -111,7 +112,7 @@ object ProductFormat {
     if (metaDataList.isEmpty) Null else metaDataList.reduce((m1, m2) => m1.copy(m2))
   }
 
-  def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply }
+  def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply } flatten
 
   // just for testing product formats, so we make them package private
   // the actual product formats are generated using boilerplate when building the project
