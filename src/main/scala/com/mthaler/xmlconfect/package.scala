@@ -58,6 +58,6 @@ package xmlconfect {
      * @param node node
      * @return TNode with identity transformation
      */
-    def id(node: Node) = TNode(node, n => n)
+    def id(node: NodeSeq) = TNode(node, n => n)
   }
 }
