@@ -4,8 +4,6 @@ import org.scalatest.FunSuite
 
 object CollectionFormatsTest {
   case class Count(count: Int)
-  case class Person(name: String = "Albert Einstein", age: Int = 42)
-  case class Persons(persons: List[Person])
 }
 
 class CollectionFormatsTest extends FunSuite {
@@ -15,7 +13,7 @@ class CollectionFormatsTest extends FunSuite {
   test("countList") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.listFormat[Count]
+    implicit val lf = WrappedCollectionFormats.listFormat[Count]
     val l = List(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -31,10 +29,27 @@ class CollectionFormatsTest extends FunSuite {
     }
   }
 
+  test("hobbyList") {
+    case class Hobby(name: String)
+    case class Person(name: String, hobbies: List[Hobby])
+    import ProductFormatInstances._
+    import BasicAttrFormats._
+    import CollectionFormats.listFormat
+    implicit val hobbyFormat = xmlFormat1(Hobby)
+    implicit val personFormat = xmlFormat2(Person)
+    val p = Person("Richard Feynman", List(Hobby("Bongo Drums"), Hobby("Hiking")))
+    assertResult(<Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/></Person>) {
+      p.toNode
+    }
+    //    assertResult(p) {
+    //      <Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/></Person>.convertTo[Person]
+    //    }
+  }
+
   test("countArray") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.arrayFormat[Count]
+    implicit val lf = WrappedCollectionFormats.arrayFormat[Count]
     val l = Array(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -71,8 +86,10 @@ class CollectionFormatsTest extends FunSuite {
 
   test("personList") {
     import BasicAttrFormats._
+    case class Person(name: String = "Albert Einstein", age: Int = 42)
+    case class Persons(persons: List[Person])
     implicit val pf = ProductFormat.xmlFormat2(Person)
-    implicit val lf = CollectionFormats.listFormat[Person]
+    implicit val lf = WrappedCollectionFormats.listFormat[Person]
     implicit val psf = ProductFormat.xmlFormat(Persons, "Persons")
     val persons = Persons(List(Person("Richard Feynman", 56)))
     assertResult(<Persons><Persons><Person name="Richard Feynman" age="56"/></Persons></Persons>) {

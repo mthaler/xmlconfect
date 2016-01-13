@@ -3,21 +3,14 @@ package com.mthaler.xmlconfect
 import scala.reflect.ClassTag
 import scala.xml.{ Node, Elem, Null }
 import scala.language.postfixOps
+import scala.language.implicitConversions
 
 object CollectionFormats {
 
   /**
    * Supplies the XmlElemFormat for lists.
    */
-  implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new SimpleXmlElemFormat[List[T]] {
-    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toList
-    protected override def writeElem(value: List[T], name: String = "") = {
-      val children = value.map(format.write(_).left.get.apply)
-      elem(name, Null, children.flatten)
-    }
-  }
-
-  implicit def listFormat2[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
+  implicit def listFormat[T](implicit format: XmlElemFormat[T]) = new XmlElemFormat[List[T]] {
 
     override protected def readElem(node: TNode, name: String): List[T] = node.apply.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toList
 
@@ -27,12 +20,11 @@ object CollectionFormats {
   /**
    * Supplies the XmlElemFormat for arrays.
    */
-  implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new SimpleXmlElemFormat[Array[T]] {
-    protected def readElem(node: Node, name: String = "") = node.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) } toArray
-    protected override def writeElem(value: Array[T], name: String = "") = {
-      val children = value.map(format.write(_).left.get.apply)
-      elem(name, Null, children.flatten.toSeq)
-    }
+  implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
+
+    override protected def readElem(node: TNode, name: String): Array[T] = node.apply.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toArray
+
+    override protected def writeElem0(value: Array[T], name: String): TNode = TNode.id(value.toSeq.flatMap(format.write(_).left.get.apply))
   }
 
   import scala.collection.{ immutable => imm }
@@ -53,6 +45,30 @@ object CollectionFormats {
     protected override def writeElem(iterable: I, name: String = "") = {
       val children = iterable.toVector.map(format.write(_).left.get.apply)
       elem(name, Null, children.flatten)
+    }
+  }
+}
+
+object WrappedCollectionFormats {
+
+  /**
+   * Supplies the XmlElemFormat for lists.
+   */
+  implicit def listFormat[T](implicit format: XmlElemFormat[T]) = wrappedFormat(CollectionFormats.listFormat[T])
+
+  /**
+   * Supplies the XmlElemFormat for arrays.
+   */
+  implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = wrappedFormat(CollectionFormats.arrayFormat)
+
+  private def wrappedFormat[T](format: XmlElemFormat[T]) = new SimpleXmlElemFormat[T] {
+
+    protected def readElem(node: Node, name: String = "") = format.read(Left(TNode.id(node)), name)
+
+    protected override def writeElem(value: T, name: String = "") = {
+
+      val result = format.write(value, name)
+      elem(name, Null, result.left.get.apply)
     }
   }
 }
