@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/mthaler/xmlconfect.png)](https://travis-ci.org/mthaler/xmlconfect)
 [![codecov.io](http://codecov.io/github/mthaler/xmlconfect/coverage.svg?branch=master)](http://codecov.io/github/mthaler/xmlconfect?branch=master)
+[![Scaladoc](http://javadoc-badge.appspot.com/com.mthaler/xmlconfect_2.11.svg?label=scaladoc)](http://javadoc-badge.appspot.com/com.mthaler/xmlconfect_2.11)
 
 _xmlconfect_ is a type class based library to serialize Scala classes, in particular case classes, to XML / deserialize XML to Scala classes
 
