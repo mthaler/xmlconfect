@@ -31,7 +31,7 @@ class CollectionFormatsTest extends FunSuite {
   test("countVector") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.vectorFormat[Count]
+    implicit val lf = WrappedCollectionFormats.vectorFormat[Count]
     val l = Vector(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -67,7 +67,7 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import collection.immutable.Iterable
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.immIterableFormat[Count]
+    implicit val lf = WrappedCollectionFormats.immIterableFormat[Count]
     val l = Iterable(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -87,7 +87,7 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import collection.immutable.Seq
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.immSeqFormat[Count]
+    implicit val lf = WrappedCollectionFormats.immSeqFormat[Count]
     val l = Seq(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -107,7 +107,7 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import collection.immutable.IndexedSeq
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.immIndexedSeqFormat[Count]
+    implicit val lf = WrappedCollectionFormats.immIndexedSeqFormat[Count]
     val l = IndexedSeq(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -127,7 +127,7 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import collection.immutable.LinearSeq
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.immLinearSeqFormat[Count]
+    implicit val lf = WrappedCollectionFormats.immLinearSeqFormat[Count]
     val l = LinearSeq(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
@@ -147,7 +147,7 @@ class CollectionFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import collection.immutable.Set
     implicit val f = ProductFormat.xmlFormat1(Count)
-    implicit val lf = CollectionFormats.immSetFormat[Count]
+    implicit val lf = WrappedCollectionFormats.immSetFormat[Count]
     val l = Set(Count(5), Count(8), Count(42))
     assertResult(<Counts><Count count="5"/><Count count="8"/><Count count="42"/></Counts>) {
       l.toNode("Counts")
