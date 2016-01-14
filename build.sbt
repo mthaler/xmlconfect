@@ -17,7 +17,7 @@ lazy val xmlConfectSettings = Seq(
   homepage := Some(url("http://github.com/mthaler/xmlconfect")),
 
   // release stuff
-  credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+  // credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishMavenStyle := true,
   publishArtifact in Test := false,
