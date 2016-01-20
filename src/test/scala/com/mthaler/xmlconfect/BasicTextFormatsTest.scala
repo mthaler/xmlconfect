@@ -114,6 +114,18 @@ class BasicTextFormatsTest extends FunSuite {
     }
   }
 
+  test("symbol") {
+    case class Test(value: Symbol)
+    implicit val f = xmlFormat1(Test)
+
+    assertResult(Test('test)) {
+      <Test>test</Test>.convertTo[Test]
+    }
+    assertResult(<Test>test</Test>) {
+      Test('test).toNode
+    }
+  }
+
   test("bigInt") {
     case class Test(value: BigInt)
     implicit val f = xmlFormat1(Test)

@@ -1,7 +1,7 @@
 package com.mthaler.xmlconfect
 
 import scala.reflect._
-import scala.xml.Text
+import scala.xml.{ Null, Node, Text }
 
 object BasicTextFormats {
 
@@ -42,6 +42,11 @@ object BasicTextFormats {
       val txt = text.text
       if (txt.length == 1) txt.charAt(0) else deserializationError("Expected Char as single-character string, but got " + txt)
     }
+  }
+
+  implicit object SymbolXmlTextFormat extends SimpleXmlTextFormat[Symbol] {
+    protected def readText(text: Text, name: String = ""): Symbol = Symbol(text.text)
+    protected override def writeElem(obj: Symbol, name: String = ""): Node = Text(obj.name)
   }
 
   implicit object BigIntXmlTextFormat extends SimpleXmlTextFormat[BigInt] {
