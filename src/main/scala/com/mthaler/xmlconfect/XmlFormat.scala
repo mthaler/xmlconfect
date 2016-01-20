@@ -105,3 +105,25 @@ trait SimpleXmlElemWriter[T] extends XmlElemWriter[T] {
  * A special XmlFormat signaling that the format produces an XML element.
  */
 trait SimpleXmlElemFormat[T] extends XmlElemFormat[T] with SimpleXmlElemReader[T] with SimpleXmlElemWriter[T]
+
+trait SimpleXmlTextReader[T] extends XmlElemReader[T] {
+
+  protected final def readElem(tnode: TNode, name: String): T = readText(tnode.apply.head.asInstanceOf[Text], name)
+
+  protected def readText(text: Text, name: String): T
+}
+
+/**
+ * A special XmlWriter capable of writing an XML element.
+ */
+@implicitNotFound(msg = "Cannot find XmlElemWriter or XmlElemFormat type class for ${T}")
+trait SimpleXmlTextWriter[T] extends XmlElemWriter[T] {
+  protected final def writeElem0(obj: T, name: String): TNode = TNode.id(writeElem(obj, name))
+
+  protected def writeElem(obj: T, name: String = ""): Node = Text(obj.toString)
+}
+
+/**
+ * A special XmlFormat signaling that the format produces an XML element.
+ */
+trait SimpleXmlTextFormat[T] extends XmlElemFormat[T] with SimpleXmlTextReader[T] with SimpleXmlTextWriter[T]
