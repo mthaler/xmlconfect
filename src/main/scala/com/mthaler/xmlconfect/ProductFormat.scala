@@ -95,8 +95,15 @@ object ProductFormat {
       val text = node.child
       reader.read(Left(TNode.id(text)), fieldName)
     case root: XmlElemReader[T] =>
-      val elem = Left(TNode(node, n => (n \ fieldName).head))
-      reader.read(elem, fieldName)
+      if (node.child.nonEmpty) {
+        val elem = Left(TNode(node, n => (n \ fieldName).head))
+        reader.read(elem, fieldName)
+      } else {
+        defaultValue match {
+          case Some(v) => v
+          case None => deserializationError("Node " + node + " does not have children and no default value is defined!")
+        }
+      }
     case _ =>
       try {
         val attr = Right(node.attributes)

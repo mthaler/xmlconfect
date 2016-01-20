@@ -12,6 +12,9 @@ object ProductFormatTest {
   case class Product1WithProduct1(product1: Product1)
   case class Product1WithOption(option: Option[Int])
   case class Person(name: String = "Albert Einstein", age: Int = 42)
+  case class Friend(name: String = "")
+  case class Person2(name: String = "", friends: List[Friend] = Nil)
+
 }
 
 class ProductFormatTest extends FunSuite {
@@ -98,6 +101,35 @@ class ProductFormatTest extends FunSuite {
     }
     assertResult(Person("Richard Feynman", 42)) {
       <Person name="Richard Feynman"/>.convertTo[Person]
+    }
+  }
+
+  test("xmlFormat2WrappedCollections") {
+    import AdditionalFormats.namedFormat
+    import BasicAttrFormats._
+
+    implicit val f = ProductFormat.xmlFormat1(Friend)
+    implicit val friendsFormat = namedFormat(WrappedCollectionFormats.listFormat[Friend], "Friends", n => (n \ "Friends").head)
+    implicit val f2 = ProductFormat.xmlFormat2(Person2)
+
+    assertResult(<Person2 name="Richard Feynman"><Friends><Friend name="Albert Einstein"/><Friend name="Paul Dirac"/></Friends></Person2>) {
+      Person2("Richard Feynman", List(Friend("Albert Einstein"), Friend("Paul Dirac"))).toNode
+    }
+
+    assertResult(Person2("Richard Feynman", List(Friend("Albert Einstein"), Friend("Paul Dirac")))) {
+      <Person2 name="Richard Feynman"><Friends><Friend name="Albert Einstein"/><Friend name="Paul Dirac"/></Friends></Person2>.convertTo[Person2]
+    }
+
+    assertResult(<Person2 name="Richard Feynman"><Friends/></Person2>) {
+      Person2("Richard Feynman", Nil).toNode
+    }
+
+    assertResult(Person2("Richard Feynman", Nil)) {
+      <Person2 name="Richard Feynman"><Friends/></Person2>.convertTo[Person2]
+    }
+
+    assertResult(Person2("Richard Feynman", Nil)) {
+      <Person2 name="Richard Feynman"/>.convertTo[Person2]
     }
   }
 }
