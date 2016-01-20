@@ -1,6 +1,7 @@
 package com.mthaler.xmlconfect
 
-import scala.xml.{ Node, Text }
+import scala.reflect._
+import scala.xml.Text
 
 object BasicTextFormats {
 
@@ -40,6 +41,21 @@ object BasicTextFormats {
     protected def readText(text: Text, name: String = ""): Char = {
       val txt = text.text
       if (txt.length == 1) txt.charAt(0) else deserializationError("Expected Char as single-character string, but got " + txt)
+    }
+  }
+
+  implicit object BigIntXmlTextFormat extends SimpleXmlTextFormat[BigInt] {
+    protected def readText(text: Text, name: String = ""): BigInt = BigInt(text.text)
+  }
+
+  implicit object BigDecimalXmlTextFormat extends SimpleXmlTextFormat[BigDecimal] {
+    protected def readText(text: Text, name: String = ""): BigDecimal = BigDecimal(text.text)
+  }
+
+  implicit def enumFormat[T <: Enum[T]: ClassTag] = new SimpleXmlTextFormat[T] {
+    protected def readText(text: Text, name: String = ""): T = {
+      val c = classTag[T].runtimeClass.asInstanceOf[Class[T]]
+      Enum.valueOf(c, text.text)
     }
   }
 }

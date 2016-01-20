@@ -113,4 +113,41 @@ class BasicTextFormatsTest extends FunSuite {
       Test('c').toNode
     }
   }
+
+  test("bigInt") {
+    case class Test(value: BigInt)
+    implicit val f = xmlFormat1(Test)
+
+    assertResult(Test(BigInt("1234567891234567891234567890"))) {
+      <Test>1234567891234567891234567890</Test>.convertTo[Test]
+    }
+    assertResult(<Test>1234567891234567891234567890</Test>) {
+      Test(BigInt("1234567891234567891234567890")).toNode
+    }
+  }
+
+  test("bigDecimal") {
+    case class Test(value: BigDecimal)
+    implicit val f = xmlFormat1(Test)
+
+    assertResult(Test(BigDecimal("1234567891234567891234567890.123456789"))) {
+      <Test>1234567891234567891234567890.123456789</Test>.convertTo[Test]
+    }
+    assertResult(<Test>1234567891234567891234567890.123456789</Test>) {
+      Test(BigDecimal("1234567891234567891234567890.123456789")).toNode
+    }
+  }
+
+  test("enum") {
+    case class Test(value: Day)
+    implicit val f = enumFormat[Day]
+    implicit val f2 = xmlFormat1(Test)
+
+    assertResult(Test(Day.MONDAY)) {
+      <Test>MONDAY</Test>.convertTo[Test]
+    }
+    assertResult(<Test>MONDAY</Test>) {
+      Test(Day.MONDAY).toNode
+    }
+  }
 }
