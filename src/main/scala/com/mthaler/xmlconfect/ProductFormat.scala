@@ -119,7 +119,7 @@ object ProductFormat {
 
   def metaData(fields: Seq[XML]): MetaData = {
     val metaDataList = fields.collect { case Right(metaData) => metaData }
-    if (metaDataList.isEmpty) Null else metaDataList.reduce((m1, m2) => m1.copy(m2))
+    if (metaDataList.isEmpty) Null else metaDataList.reduceRight((m1, m2) => m1.copy(m2))
   }
 
   def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply } flatten
