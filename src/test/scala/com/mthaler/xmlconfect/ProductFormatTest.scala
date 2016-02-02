@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 
 import ProductFormat._
 import scala.reflect.classTag
-import scala.xml.{Null, Text, Attribute}
+import scala.xml.{ Null, Text, Attribute }
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)
