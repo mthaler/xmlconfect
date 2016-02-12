@@ -4,7 +4,7 @@ import org.scalatest.FunSuite
 
 import ProductFormat._
 import scala.reflect.classTag
-import scala.xml.{Null, Text, Attribute}
+import scala.xml.{ Null, Text, Attribute }
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)
@@ -127,6 +127,10 @@ class ProductFormatTest extends FunSuite {
 
     assertResult(Person2("Richard Feynman", Nil)) {
       <Person2 name="Richard Feynman"><Friends/></Person2>.convertTo[Person2]
+    }
+
+    assertResult(Person2("Richard Feynman", Nil)) {
+      <Person2 name="Richard Feynman"/>.convertTo[Person2]
     }
 
     assertResult(Person2("Richard Feynman", Nil)) {
