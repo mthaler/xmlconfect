@@ -144,7 +144,7 @@ It is quite common to serialize / deserialize collections of objects. It is easy
 import com.mthaler.xmlconfect._
 import com.mthaler.xmlconfect.BasicAttrFormats._
 import com.mthaler.xmlconfect.ProductFormatInstances._
-import com.mthaler.xmlconfect.CollectionFormats.listFormat
+import com.mthaler.xmlconfect.WrappedCollectionFormats.listFormat
 implicit val f = xmlFormat2(Person)
 val persons = List(Person("Albert Einstein", 42), Person("Richard Feyman", 28))
 persons.toNode("Persons")
@@ -159,14 +159,14 @@ It is just as easy to deserialize the persons list:
 import com.mthaler.xmlconfect._
 import com.mthaler.xmlconfect.BasicAttrFormats._
 import com.mthaler.xmlconfect.ProductFormatInstances._
-import com.mthaler.xmlconfect.CollectionFormats.listFormat
+import com.mthaler.xmlconfect.WrappedCollectionFormats.listFormat
 implicit val f = xmlFormat2(Person)
 <Persons>
   <Person name="Albert Einstein" age="42"/>
   <Person name="Richard Feyman" age="28"/>
 </Persons>.convertTo[List[Person]]
 ```
-In addition to the formats used to serialize / deserialize a person instance, we now import `com.mthaler.xmlconfect.CollectionFormats.listFormat` which offers a format to serialize / deserialize lists. There are formats for several collection types:
+In addition to the formats used to serialize / deserialize a person instance, we now import `com.mthaler.xmlconfect.WrappedCollectionFormats.listFormat` which offers a format to serialize / deserialize lists. There are formats for several collection types:
 
 * List
 * Array
@@ -183,6 +183,18 @@ val persons = List(Person("Albert Einstein", 42), Person("Richard Feyman", 28))
 persons.toNode("Persons")
 ```
 We have to use the overloaded version here, otherwise the top-level element will have an empty name which is not valid XML.
+
+It is also possible to serialize lists without wrapping them using 
+
+```
+import com.mthaler.xmlconfect.CollectionFormats.listFormat
+```
+
+instead of
+
+```
+import com.mthaler.xmlconfect.WrappedCollectionFormats.listFormat
+```
 
 ###Renaming elements
 It is sometimes necessary to rename elements, e.g. we have a list of Integer classes, but want to rename Integer to Int in the resulting XML. This is easy to do with _xmlconfect_:
