@@ -6,7 +6,7 @@ lazy val xmlConfectSettings = Seq(
   crossScalaVersions := Seq("2.11.8", "2.12.1"),
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
+    "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
     "org.scalatest" %% "scalatest" % "3.0.1" % "test"
   ),
   scalacOptions ++= Seq(
