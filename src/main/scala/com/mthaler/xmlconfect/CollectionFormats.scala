@@ -15,7 +15,12 @@ object CollectionFormats {
 
     override protected def readElem(node: TNode, name: String): List[T] = node.node flatMap (n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toList
 
-    override protected def writeElem0(value: List[T], name: String): TNode = TNode.id(value.flatMap(format.write(_).left.get.apply))
+    override protected def writeElem0(value: List[T], name: String): TNode = {
+      // write each element using the provided XMLElemFormat
+      val children = value.flatMap(format.write(_).left.get.apply)
+      // create a TNode and return the result
+      TNode.id(children)
+    }
   }
 
   /**
