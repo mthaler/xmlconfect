@@ -94,7 +94,7 @@ class AdditionalFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import ProductFormat._
     implicit val intFormat = xmlFormat1(Integer)
-    implicit val intListFomat = WrappedCollectionFormats.listFormat[Integer]
+    implicit val intListFomat = WrappedCollectionFormats.listFormat[Integer]()
     assertResult(<Integers><Integer value="5"/><Integer value="10"/><Integer value="15"/></Integers>) {
       List(Integer(5), Integer(10), Integer(15)).toNode("Integers")
     }
@@ -102,7 +102,7 @@ class AdditionalFormatsTest extends FunSuite {
       <Integers><Integer value="5"/><Integer value="10"/><Integer value="15"/></Integers>.convertTo[List[Integer]]
     }
     val namedIntFormat = AdditionalFormats.namedFormat(xmlFormat1(Integer), "Int")
-    val namedIntListFomat = WrappedCollectionFormats.listFormat[Integer](namedIntFormat)
+    val namedIntListFomat = WrappedCollectionFormats.listFormat[Integer]()(namedIntFormat)
     assertResult(<Integers><Int value="5"/><Int value="10"/><Int value="15"/></Integers>) {
       List(Integer(5), Integer(10), Integer(15)).toNode("Integers")(namedIntListFomat)
     }
@@ -115,7 +115,7 @@ class AdditionalFormatsTest extends FunSuite {
     import BasicAttrFormats._
     import ProductFormat._
     implicit val friendFormat = xmlFormat1(Friend)
-    implicit val friendsFormat = AdditionalFormats.namedFormat(WrappedCollectionFormats.listFormat[Friend], "Buddies", n => (n \ "Buddies").head)
+    implicit val friendsFormat = WrappedCollectionFormats.listFormat[Friend]("Buddies")
     implicit val f = xmlFormat2(Person)
     val p = Person("Albert Einstein", List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac")))
     assertResult(<Person name="Albert Einstein"><Buddies><Friend name="Richard Feynman"/><Friend name="Werner Heisenberg"/><Friend name="Paul Dirac"/></Buddies></Person>) {

@@ -106,11 +106,10 @@ class ProductFormatTest extends FunSuite {
   }
 
   test("xmlFormat2WrappedCollections") {
-    import AdditionalFormats.namedFormat
     import BasicAttrFormats._
 
     implicit val f = ProductFormat.xmlFormat1(Friend)
-    implicit val friendsFormat = namedFormat(WrappedCollectionFormats.listFormat[Friend], "Friends", n => (n \ "Friends").head)
+    implicit val friendsFormat = WrappedCollectionFormats.listFormat[Friend]("Friends")
     implicit val f2 = ProductFormat.xmlFormat2(Person2)
 
     assertResult(<Person2 name="Richard Feynman"><Friends><Friend name="Albert Einstein"/><Friend name="Paul Dirac"/></Friends></Person2>) {
