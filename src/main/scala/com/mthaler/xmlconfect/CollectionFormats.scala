@@ -74,18 +74,18 @@ object WrappedCollectionFormats {
   /**
    * Supplies the XmlElemFormat for arrays.
    */
-  //  implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = wrappedFormat(CollectionFormats.arrayFormat)
-  //
-  //  implicit def immIterableFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Iterable[T], T](seq => imm.Iterable(seq: _*))
-  //  implicit def immSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Seq[T], T](seq => imm.Seq(seq: _*))
-  //  implicit def immIndexedSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.IndexedSeq[T], T](seq => imm.IndexedSeq(seq: _*))
-  //  implicit def immLinearSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.LinearSeq[T], T](seq => imm.LinearSeq(seq: _*))
-  //  implicit def immSetFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Set[T], T](seq => imm.Set(seq: _*))
-  //  implicit def vectorFormat[T: SimpleXmlElemFormat] = viaSeq[Vector[T], T](seq => Vector(seq: _*))
+  implicit def arrayFormat[T: ClassTag](wrapperName: String = "")(implicit format: XmlElemFormat[T]) = wrappedFormat(wrapperName, CollectionFormats.arrayFormat)
 
-  //  def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = wrappedFormat(CollectionFormats.viaSeq(f))
+  implicit def immIterableFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Iterable[T], T](wrapperName, seq => imm.Iterable(seq: _*))
+  implicit def immSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Seq[T], T](wrapperName, seq => imm.Seq(seq: _*))
+  implicit def immIndexedSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.IndexedSeq[T], T](wrapperName, seq => imm.IndexedSeq(seq: _*))
+  implicit def immLinearSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.LinearSeq[T], T](wrapperName, seq => imm.LinearSeq(seq: _*))
+  implicit def immSetFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Set[T], T](wrapperName, seq => imm.Set(seq: _*))
+  implicit def vectorFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[Vector[T], T](wrapperName, seq => Vector(seq: _*))
 
-  private def wrappedFormat[T](wrapperName: String, format: XmlElemFormat[T]) = new XmlElemFormat[T] with SimpleXmlElemWriter[T] {
+  def viaSeq[I <: Iterable[T], T](wrapperName: String, f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = wrappedFormat(wrapperName, CollectionFormats.viaSeq(f))
+
+  private def wrappedFormat[T](wrapperName: String, format: XmlElemFormat[T]): XmlElemFormat[T] = new XmlElemFormat[T] with SimpleXmlElemWriter[T] {
 
     override protected def readElem(tnode: TNode, name: String): T = {
       if (wrapperName.nonEmpty) {

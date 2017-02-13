@@ -1,9 +1,7 @@
 package com.mthaler.xmlconfect
 
-import com.mthaler.xmlconfect
 import org.scalatest.FunSuite
 import ProductFormat._
-
 import scala.xml._
 
 object AdditionalFormatsTest {
