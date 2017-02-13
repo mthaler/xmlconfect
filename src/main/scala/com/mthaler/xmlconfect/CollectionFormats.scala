@@ -72,9 +72,9 @@ object WrappedCollectionFormats {
 
   private def wrappedFormat[T](format: XmlElemFormat[T]) = new SimpleXmlElemFormat[T] {
 
-    protected def readElem(node: Node, name: String = "") = format.read(Left(TNode.id(node)), name)
+    protected def readElem(node: Node, name: String = ""): T = format.read(Left(TNode.id(node)), name)
 
-    protected override def writeElem(value: T, name: String = "") = {
+    protected override def writeElem(value: T, name: String = ""): Node = {
 
       val result = format.write(value, name)
       elem(name, Null, result.left.get.apply)
