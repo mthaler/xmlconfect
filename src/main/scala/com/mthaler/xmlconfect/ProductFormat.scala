@@ -84,10 +84,7 @@ object ProductFormat {
 
   def productElement2Field[T](fieldName: String, p: Product, ix: Int, rest: List[XML] = Nil)(implicit writer: XmlWriter[T]): List[XML] = {
     val value = p.productElement(ix).asInstanceOf[T]
-    writer match {
-      //case _: OptionFormat[_] if (value == None) => rest
-      case _ => writer.write(value, fieldName) :: rest
-    }
+    writer.write(value, fieldName) :: rest
   }
 
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
