@@ -84,6 +84,18 @@ trait XmlElemWriter[T] extends XmlWriter[T] {
  */
 trait XmlElemFormat[T] extends XmlFormat[T] with XmlElemReader[T] with XmlElemWriter[T]
 
+/**
+ * A special XmlElemFormat that has an intrinsic name.
+ *
+ * An example for this is a ProductFormat. The intrinsic name would be the product prefix
+ *
+ * @tparam T
+ */
+trait NamedXmlElemFormat[T] extends XmlElemFormat[T] {
+
+  def intrinsicName: String
+}
+
 trait SimpleXmlElemReader[T] extends XmlElemReader[T] {
 
   protected final def readElem(tnode: TNode, name: String): T = readElem(tnode.apply.head, name)
