@@ -19,7 +19,11 @@ object CollectionFormats {
 
       def readChildren(n: Node): Seq[T] = {
         val children: Seq[Node] = n.child
-        children.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }
+        format match {
+          case n: NamedXmlElemFormat[_] => children.collect { case elem: Elem if elem.label == n.intrinsicName => format.read(Left(TNode.id(elem))) }
+          case _ => children.collect { case elem: Elem if elem.label == name => format.read(Left(TNode.id(elem))) }
+        }
+
       }
 
       nodeSeq flatMap (readChildren) toList
