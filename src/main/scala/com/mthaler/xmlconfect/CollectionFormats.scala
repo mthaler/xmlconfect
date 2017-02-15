@@ -79,10 +79,27 @@ object CollectionFormats {
    */
   def viaSeq[I <: Iterable[T], T](f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = new XmlElemFormat[I] {
 
-    override protected def readElem(node: TNode, name: String = "") = f(node.node.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toVector)
+    override protected def readElem(node: TNode, name: String = "") = {
+      // get the XML node seq
+      val nodeSeq = node.node
+
+      def readChildren(n: Node): Seq[T] = {
+        val children: Seq[Node] = n.child
+        format match {
+          case n: NamedXmlElemFormat[_] => children.collect { case elem: Elem if elem.label == n.intrinsicName => format.read(Left(TNode.id(elem))) }
+          case _ => children.collect { case elem: Elem if elem.label == name => format.read(Left(TNode.id(elem))) }
+        }
+
+      }
+
+      f(nodeSeq flatMap (readChildren) toVector)
+    }
 
     override protected def writeElem0(iterable: I, name: String = ""): TNode = {
-      TNode.id(iterable.toVector.flatMap(format.write(_).left.get.apply))
+      // write each element using the provided XMLElemFormat
+      val children = iterable.toVector.flatMap(format.write(_).left.get.apply)
+      // create a TNode and return the result
+      TNode.id(children)
     }
   }
 }
