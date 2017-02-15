@@ -126,7 +126,14 @@ object ProductFormat {
 
     def getProductClass: Class[_]
 
-    override def intrinsicName: String = getProductClass.getName
+    override def intrinsicName: String = {
+      import reflect.runtime.{ currentMirror => cm }
+      val sym = cm.classSymbol(getProductClass)
+      val name0 = sym.name.decodedName.toString
+      val name1 = if (name0.startsWith("$")) name0.substring(1) else name0
+      val index = name1.indexOf('$')
+      if (index > 0) name1.substring(0, index) else name1
+    }
   }
 
   // just for testing product formats, so we make them package private
