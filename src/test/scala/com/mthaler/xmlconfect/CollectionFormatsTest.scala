@@ -28,6 +28,25 @@ class CollectionFormatsTest extends FunSuite {
     }
   }
 
+  test("hobbyFriendList") {
+    case class Hobby(name: String)
+    case class Friend(name: String)
+    case class Person(name: String, hobbies: List[Hobby], friends: List[Friend])
+    import ProductFormatInstances._
+    import BasicAttrFormats._
+    import CollectionFormats.listFormat
+    implicit val hobbyFormat = xmlFormat1(Hobby)
+    implicit val friendFormat = xmlFormat1(Friend)
+    implicit val personFormat = xmlFormat3(Person)
+    val p = Person("Richard Feynman", List(Hobby("Bongo Drums"), Hobby("Hiking")), List(Friend("Freeman Dyson")))
+    assertResult(<Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/><Friend name="Freeman Dyson"/></Person>) {
+      p.toNode
+    }
+    assertResult(p) {
+      <Person name="Richard Feynman"><Hobby name="Bongo Drums"/><Hobby name="Hiking"/><Friend name="Freeman Dyson"/></Person>.convertTo[Person]
+    }
+  }
+
   test("countVector") {
     import BasicAttrFormats._
     implicit val f = ProductFormat.xmlFormat1(Count)
