@@ -42,9 +42,28 @@ object CollectionFormats {
    */
   implicit def arrayFormat[T: ClassTag](implicit format: XmlElemFormat[T]) = new XmlElemFormat[Array[T]] {
 
-    override protected def readElem(node: TNode, name: String): Array[T] = node.node.flatMap(n => n.child.collect { case elem: Elem => format.read(Left(TNode.id(elem))) }) toArray
+    override protected def readElem(node: TNode, name: String): Array[T] = {
+      // get the XML node seq
+      val nodeSeq = node.node
 
-    override protected def writeElem0(value: Array[T], name: String): TNode = TNode.id(value.toSeq.flatMap(format.write(_).left.get.apply))
+      def readChildren(n: Node): Seq[T] = {
+        val children: Seq[Node] = n.child
+        format match {
+          case n: NamedXmlElemFormat[_] => children.collect { case elem: Elem if elem.label == n.intrinsicName => format.read(Left(TNode.id(elem))) }
+          case _ => children.collect { case elem: Elem if elem.label == name => format.read(Left(TNode.id(elem))) }
+        }
+
+      }
+
+      nodeSeq flatMap (readChildren) toArray
+    }
+
+    override protected def writeElem0(value: Array[T], name: String): TNode = {
+      // write each element using the provided XMLElemFormat
+      val children = value.toSeq.flatMap(format.write(_).left.get.apply)
+      // create a TNode and return the result
+      TNode.id(children)
+    }
   }
 
   implicit def immIterableFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Iterable[T], T](seq => imm.Iterable(seq: _*))
