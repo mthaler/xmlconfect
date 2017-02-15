@@ -124,9 +124,9 @@ object ProductFormat {
 
   trait NamedProductFormat[T <: Product] extends NamedXmlElemFormat[T] {
 
-    def getClassName: String
+    def getProductClass: Class[_]
 
-    override def intrinsicName: String = getClassName
+    override def intrinsicName: String = getProductClass.getName
   }
 
   // just for testing product formats, so we make them package private
@@ -138,7 +138,7 @@ object ProductFormat {
   private[xmlconfect] def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): SimpleXmlElemFormat[T] =
     new SimpleXmlElemFormat[T] with NamedProductFormat[T] {
 
-      override def getClassName: String = classTag[T].runtimeClass.getName
+      override def getProductClass: Class[_] = classTag[T].runtimeClass
 
       protected override def writeElem(p: T, name: String = "") = {
         val fields = new collection.mutable.ListBuffer[XML]
@@ -166,7 +166,7 @@ object ProductFormat {
   private[xmlconfect] def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): SimpleXmlElemFormat[T] =
     new SimpleXmlElemFormat[T] with NamedProductFormat[T] {
 
-      override def getClassName: String = classTag[T].runtimeClass.getName
+      override def getProductClass: Class[_] = classTag[T].runtimeClass
 
       protected override def writeElem(p: T, name: String = "") = {
         val fields = new collection.mutable.ListBuffer[XML]
