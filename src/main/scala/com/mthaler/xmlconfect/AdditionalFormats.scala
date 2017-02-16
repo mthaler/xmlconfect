@@ -44,14 +44,18 @@ object AdditionalFormats {
     protected def readElem(tnode: TNode, name: String = ""): T = reader.read(Left(tnode), name)
   }
 
-  def namedFormat[T](format: XmlElemFormat[T], name: String) = new XmlElemFormat[T] {
+  def namedFormat[T](format: XmlElemFormat[T], name: String) = new XmlElemFormat[T] with NamedXmlElemFormat[T] {
+
+    override def intrinsicName: String = name
 
     override protected def readElem(tnode: TNode, n: String): T = format.read(Left(tnode), name)
 
     override protected def writeElem0(obj: T, n: String): TNode = format.write(obj, name).left.get
   }
 
-  def namedFormat[T](format: XmlElemFormat[T], name: String, transform: NodeSeq => NodeSeq) = new XmlElemFormat[T] {
+  def namedFormat[T](format: XmlElemFormat[T], name: String, transform: NodeSeq => NodeSeq) = new XmlElemFormat[T] with NamedXmlElemFormat[T] {
+
+    override def intrinsicName: String = name
 
     override protected def readElem(tnode: TNode, n: String): T = format.read(Left(TNode(tnode.node, transform)), name)
 
