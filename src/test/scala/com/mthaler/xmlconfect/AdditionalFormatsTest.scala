@@ -8,6 +8,8 @@ object AdditionalFormatsTest {
   case class Friend(name: String)
   case class Person(name: String, friends: List[Friend])
   case class Integer(value: Int)
+  case class Researcher(name: String, institution: Institution)
+  case class Institution(name: String)
 }
 
 class AdditionalFormatsTest extends FunSuite {
@@ -100,6 +102,21 @@ class AdditionalFormatsTest extends FunSuite {
     }
     assertResult(p) {
       <Person name="Albert Einstein"><Buddies><Friend name="Richard Feynman"/><Friend name="Werner Heisenberg"/><Friend name="Paul Dirac"/></Buddies></Person>.convertTo[Person]
+    }
+  }
+
+  test("namedFormat2") {
+    import BasicAttrFormats._
+    import ProductFormat._
+    import AdditionalFormats.namedFormat
+    implicit val institutionFormat = namedFormat(xmlFormat1(Institution), "Institute")
+    implicit val researcherFormat = xmlFormat2(Researcher)
+    val researcher = Researcher("Albert Einstein", Institution("Institute of Advanced Studies"))
+    assertResult(<Researcher name="Albert Einstein"><Institute name="Institute of Advanced Studies"/></Researcher>) {
+      researcher.toNode
+    }
+    assertResult(researcher) {
+      <Researcher name="Albert Einstein"><Institute name="Institute of Advanced Studies"/></Researcher>.convertTo[Researcher]
     }
   }
 }

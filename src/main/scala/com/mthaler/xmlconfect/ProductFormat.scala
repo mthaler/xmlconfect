@@ -84,13 +84,28 @@ object ProductFormat {
 
   def productElement2Field[T](fieldName: String, p: Product, ix: Int, rest: List[XML] = Nil)(implicit writer: XmlWriter[T]): List[XML] = {
     val value = p.productElement(ix).asInstanceOf[T]
-    writer.write(value, fieldName) :: rest
+    writer match {
+      case named: NamedXmlElemFormat[T] => writer.write(value, named.intrinsicName) :: rest
+      case _ => writer.write(value, fieldName) :: rest
+    }
   }
 
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case text: SimpleXmlTextReader[T] =>
       val text = node.child
       reader.read(Left(TNode.id(text)), fieldName)
+    case named: NamedXmlElemFormat[T] =>
+      val name = named.intrinsicName
+      try {
+        val elem = Left(TNode(node, n => (n \ name).head))
+        reader.read(elem, name)
+      } catch {
+        case ex: NoSuchElementException =>
+          defaultValue match {
+            case Some(v) => v
+            case None => deserializationError("Node " + node + " does not have children and no default value is defined!")
+          }
+      }
     case root: XmlElemReader[T] =>
       try {
         val elem = Left(TNode(node, n => (n \ fieldName).head))

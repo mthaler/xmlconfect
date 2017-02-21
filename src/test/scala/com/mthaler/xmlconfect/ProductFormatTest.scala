@@ -39,11 +39,11 @@ class ProductFormatTest extends FunSuite {
     }
     implicit val f2 = xmlFormat1(Product1WithProduct1)
     val p2 = Product1WithProduct1(Product1("test"))
-    assertResult(<Product1WithProduct1><product1 field1="test"/></Product1WithProduct1>) {
+    assertResult(<Product1WithProduct1><Product1 field1="test"/></Product1WithProduct1>) {
       p2.toNode
     }
     assertResult(p2) {
-      <Product1WithProduct1><product1 field1="test"/></Product1WithProduct1>.convertTo[Product1WithProduct1]
+      <Product1WithProduct1><Product1 field1="test"/></Product1WithProduct1>.convertTo[Product1WithProduct1]
     }
   }
 
