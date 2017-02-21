@@ -93,7 +93,8 @@ class AdditionalFormatsTest extends FunSuite {
   test("namedFormat") {
     import BasicAttrFormats._
     import ProductFormat._
-    implicit val friendFormat = xmlFormat1(Friend)
+    import AdditionalFormats.namedFormat
+    implicit val friendFormat = namedFormat(xmlFormat1(Friend))
     implicit val friendsFormat = WrappedCollectionFormats.listFormat[Friend]("Buddies")
     implicit val f = xmlFormat2(Person)
     val p = Person("Albert Einstein", List(Friend("Richard Feynman"), Friend("Werner Heisenberg"), Friend("Paul Dirac")))

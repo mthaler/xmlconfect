@@ -29,7 +29,8 @@ class ProductFormatTest extends FunSuite {
 
   test("xmlFormat1") {
     import BasicAttrFormats._
-    implicit val f = xmlFormat1(Product1)
+    import AdditionalFormats.namedFormat
+    implicit val f = namedFormat(xmlFormat1(Product1))
     val p = Product1("test")
     assertResult(<Product1 field1="test"/>) {
       p.toNode
@@ -107,8 +108,9 @@ class ProductFormatTest extends FunSuite {
 
   test("xmlFormat2WrappedCollections") {
     import BasicAttrFormats._
+    import AdditionalFormats._
 
-    implicit val f = ProductFormat.xmlFormat1(Friend)
+    implicit val f = namedFormat(ProductFormat.xmlFormat1(Friend))
     implicit val friendsFormat = WrappedCollectionFormats.listFormat[Friend]("Friends")
     implicit val f2 = ProductFormat.xmlFormat2(Person2)
 

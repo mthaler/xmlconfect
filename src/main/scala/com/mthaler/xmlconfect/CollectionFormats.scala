@@ -66,12 +66,12 @@ object CollectionFormats {
     }
   }
 
-  implicit def immIterableFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Iterable[T], T](seq => imm.Iterable(seq: _*))
-  implicit def immSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Seq[T], T](seq => imm.Seq(seq: _*))
-  implicit def immIndexedSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.IndexedSeq[T], T](seq => imm.IndexedSeq(seq: _*))
-  implicit def immLinearSeqFormat[T: SimpleXmlElemFormat] = viaSeq[imm.LinearSeq[T], T](seq => imm.LinearSeq(seq: _*))
-  implicit def immSetFormat[T: SimpleXmlElemFormat] = viaSeq[imm.Set[T], T](seq => imm.Set(seq: _*))
-  implicit def vectorFormat[T: SimpleXmlElemFormat] = viaSeq[Vector[T], T](seq => Vector(seq: _*))
+  implicit def immIterableFormat[T: XmlElemFormat] = viaSeq[imm.Iterable[T], T](seq => imm.Iterable(seq: _*))
+  implicit def immSeqFormat[T: XmlElemFormat] = viaSeq[imm.Seq[T], T](seq => imm.Seq(seq: _*))
+  implicit def immIndexedSeqFormat[T: XmlElemFormat] = viaSeq[imm.IndexedSeq[T], T](seq => imm.IndexedSeq(seq: _*))
+  implicit def immLinearSeqFormat[T: XmlElemFormat] = viaSeq[imm.LinearSeq[T], T](seq => imm.LinearSeq(seq: _*))
+  implicit def immSetFormat[T: XmlElemFormat] = viaSeq[imm.Set[T], T](seq => imm.Set(seq: _*))
+  implicit def vectorFormat[T: XmlElemFormat] = viaSeq[Vector[T], T](seq => Vector(seq: _*))
 
   /**
    * An XmlElemFormat construction helper that creates a XmlElemFormat for an iterable type I from a builder function
@@ -116,12 +116,12 @@ object WrappedCollectionFormats {
    */
   implicit def arrayFormat[T: ClassTag](wrapperName: String = "")(implicit format: XmlElemFormat[T]) = wrappedFormat(wrapperName, CollectionFormats.arrayFormat)
 
-  implicit def immIterableFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Iterable[T], T](wrapperName, seq => imm.Iterable(seq: _*))
-  implicit def immSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Seq[T], T](wrapperName, seq => imm.Seq(seq: _*))
-  implicit def immIndexedSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.IndexedSeq[T], T](wrapperName, seq => imm.IndexedSeq(seq: _*))
-  implicit def immLinearSeqFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.LinearSeq[T], T](wrapperName, seq => imm.LinearSeq(seq: _*))
-  implicit def immSetFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[imm.Set[T], T](wrapperName, seq => imm.Set(seq: _*))
-  implicit def vectorFormat[T: SimpleXmlElemFormat](wrapperName: String = "") = viaSeq[Vector[T], T](wrapperName, seq => Vector(seq: _*))
+  implicit def immIterableFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[imm.Iterable[T], T](wrapperName, seq => imm.Iterable(seq: _*))
+  implicit def immSeqFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[imm.Seq[T], T](wrapperName, seq => imm.Seq(seq: _*))
+  implicit def immIndexedSeqFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[imm.IndexedSeq[T], T](wrapperName, seq => imm.IndexedSeq(seq: _*))
+  implicit def immLinearSeqFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[imm.LinearSeq[T], T](wrapperName, seq => imm.LinearSeq(seq: _*))
+  implicit def immSetFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[imm.Set[T], T](wrapperName, seq => imm.Set(seq: _*))
+  implicit def vectorFormat[T: XmlElemFormat](wrapperName: String = "") = viaSeq[Vector[T], T](wrapperName, seq => Vector(seq: _*))
 
   def viaSeq[I <: Iterable[T], T](wrapperName: String, f: imm.Seq[T] => I)(implicit format: XmlElemFormat[T]): XmlElemFormat[I] = wrappedFormat(wrapperName, CollectionFormats.viaSeq(f))
 

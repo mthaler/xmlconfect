@@ -1,6 +1,7 @@
 package com.mthaler.xmlconfect
 
-import scala.xml.{ NodeSeq, Null, MetaData }
+import scala.reflect.{ ClassTag, classTag }
+import scala.xml.{ MetaData, NodeSeq, Null }
 
 object AdditionalFormats {
 
@@ -44,6 +45,22 @@ object AdditionalFormats {
     protected def readElem(tnode: TNode, name: String = ""): T = reader.read(Left(tnode), name)
   }
 
+  def namedFormat[T <: Product: ClassTag](format: XmlElemFormat[T]) = new XmlElemFormat[T] with NamedXmlElemFormat[T] {
+
+    override def intrinsicName: String = {
+      import reflect.runtime.{ currentMirror => cm }
+      val sym = cm.classSymbol(classTag[T].runtimeClass)
+      val name0 = sym.name.decodedName.toString
+      val name1 = if (name0.startsWith("$")) name0.substring(1) else name0
+      val index = name1.indexOf('$')
+      if (index > 0) name1.substring(0, index) else name1
+    }
+
+    override protected def readElem(tnode: TNode, n: String): T = format.read(Left(tnode), intrinsicName)
+
+    override protected def writeElem0(obj: T, n: String): TNode = format.write(obj, intrinsicName).left.get
+  }
+
   def namedFormat[T](format: XmlElemFormat[T], name: String) = new XmlElemFormat[T] with NamedXmlElemFormat[T] {
 
     override def intrinsicName: String = name
@@ -64,5 +81,4 @@ object AdditionalFormats {
       format.write(obj, name).left.get
     }
   }
-
 }

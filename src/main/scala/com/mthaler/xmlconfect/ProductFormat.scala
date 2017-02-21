@@ -137,20 +137,6 @@ object ProductFormat {
 
   def children(fields: Seq[XML]): Seq[Node] = fields.collect { case Left(node) => node.apply } flatten
 
-  trait NamedProductFormat[T <: Product] extends NamedXmlElemFormat[T] {
-
-    def getProductClass: Class[_]
-
-    override def intrinsicName: String = {
-      import reflect.runtime.{ currentMirror => cm }
-      val sym = cm.classSymbol(getProductClass)
-      val name0 = sym.name.decodedName.toString
-      val name1 = if (name0.startsWith("$")) name0.substring(1) else name0
-      val index = name1.indexOf('$')
-      if (index > 0) name1.substring(0, index) else name1
-    }
-  }
-
   // just for testing product formats, so we make them package private
   // the actual product formats are generated using boilerplate when building the project
   private[xmlconfect] def xmlFormat1[P1: XF, T <: Product: ClassTag](construct: (P1) => T): SimpleXmlElemFormat[T] = {
@@ -158,9 +144,7 @@ object ProductFormat {
     xmlFormat(construct, p1)
   }
   private[xmlconfect] def xmlFormat[P1: XF, T <: Product: ClassTag](construct: (P1) => T, fieldName1: String): SimpleXmlElemFormat[T] =
-    new SimpleXmlElemFormat[T] with NamedProductFormat[T] {
-
-      override def getProductClass: Class[_] = classTag[T].runtimeClass
+    new SimpleXmlElemFormat[T] {
 
       protected override def writeElem(p: T, name: String = "") = {
         val fields = new collection.mutable.ListBuffer[XML]
@@ -186,9 +170,7 @@ object ProductFormat {
     xmlFormat(construct, p1, p2)
   }
   private[xmlconfect] def xmlFormat[P1: XF, P2: XF, T <: Product: ClassTag](construct: (P1, P2) => T, fieldName1: String, fieldName2: String): SimpleXmlElemFormat[T] =
-    new SimpleXmlElemFormat[T] with NamedProductFormat[T] {
-
-      override def getProductClass: Class[_] = classTag[T].runtimeClass
+    new SimpleXmlElemFormat[T] {
 
       protected override def writeElem(p: T, name: String = "") = {
         val fields = new collection.mutable.ListBuffer[XML]

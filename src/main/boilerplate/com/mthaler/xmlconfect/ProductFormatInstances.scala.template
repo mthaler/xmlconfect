@@ -12,9 +12,7 @@ object ProductFormatInstances {
     val Array([#p1#]) = extractFieldNames(classTag[T])
     xmlFormat(construct, [#p1#])
   }
-  def xmlFormat[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T, [#fieldName1: String#]): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] with NamedProductFormat[T] {
-
-    override def getProductClass: Class[_] = classTag[T].runtimeClass
+  def xmlFormat[[#P1 :XF#], T <: Product : ClassTag](construct: ([#P1#]) => T, [#fieldName1: String#]): SimpleXmlElemFormat[T] = new SimpleXmlElemFormat[T] {
 
     protected override def writeElem(p: T, name: String = "") = {
       val fields = new collection.mutable.ListBuffer[XML]
