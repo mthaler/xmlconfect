@@ -3,11 +3,11 @@ import ReleaseTransformations._
 lazy val xmlConfectSettings = Seq(
   organization := "com.mthaler",
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.11.8", "2.12.1"),
+  crossScalaVersions := Seq("2.11.8", "2.12.2"),
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-    "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
-    "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+    "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
+    "org.scalatest" %% "scalatest" % "3.0.3" % "test"
   ),
   scalacOptions ++= Seq(
     "-deprecation",
