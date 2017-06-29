@@ -4,6 +4,11 @@ import com.mthaler.xmlconfect.ProductFormat._
 import scala.reflect.{ ClassTag, classTag }
 import scala.xml.Node
 
+/**
+  * Defines custom product formats. These are necessary to write some case class members as attributes and other
+  * case class members as elements. Unfortunately this is not type safe, thus normal product formats should be
+  * preferred whenever possible
+  */
 object CustomProductFormat {
 
   // just for testing product formats, so we make them package private
