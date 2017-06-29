@@ -89,7 +89,7 @@ object ProductFormat {
       case _ => writer.write(value, fieldName) :: rest
     }
   }
-  
+
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case text: SimpleXmlTextReader[T] =>
       val text = node.child
