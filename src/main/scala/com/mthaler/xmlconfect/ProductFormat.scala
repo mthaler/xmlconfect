@@ -90,6 +90,16 @@ object ProductFormat {
     }
   }
 
+  def productElement2FieldMultipleWriters[T](fieldName: String, p: Product, ix: Int, rest: List[XML] = Nil)(f: String => XmlWriter[T]): List[XML] = {
+    val value = p.productElement(ix).asInstanceOf[T]
+    // get writer for given field name
+    val writer = f(fieldName)
+    writer match {
+      case named: NamedXmlElemFormat[T] => writer.write(value, named.intrinsicName) :: rest
+      case _ => writer.write(value, fieldName) :: rest
+    }
+  }
+
   def fromField[T](node: Node, fieldName: String, defaultValue: Option[T] = None)(implicit reader: XmlReader[T]): T = reader match {
     case text: SimpleXmlTextReader[T] =>
       val text = node.child
