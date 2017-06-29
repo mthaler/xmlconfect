@@ -39,4 +39,18 @@ class CustomProductFormatTest extends FunSuite {
       <Product2 field2="42"><field1>test</field1></Product2>.convertTo[Product2]
     }
   }
+
+  test("xmlFormat2MixedRenamed") {
+    implicit val f = xmlFormat2(Product2)(
+      AdditionalFormats.namedFormat(BasicElemFormats.StringXmlElemFormat, "Field1"),
+      BasicAttrFormats.IntXmlAttrFormat, classTag[Product2]
+    )
+    val p = Product2("test", 42)
+    assertResult(<Product2 field2="42"><Field1>test</Field1></Product2>) {
+      p.toNode
+    }
+    assertResult(p) {
+      <Product2 field2="42"><Field1>test</Field1></Product2>.convertTo[Product2]
+    }
+  }
 }
