@@ -254,4 +254,18 @@ class WrappedCollectionFormatsTest extends FunSuite {
     }
   }
 
+  test("serializeDeserializeXML") {
+    case class Hobby(name: String)
+    case class Person(name: String, hobbies: List[Hobby])
+    import ProductFormatInstances._
+    import BasicAttrFormats._
+    import CollectionFormats.listFormat
+    import AdditionalFormats.namedFormat
+    implicit val hobbyFormat = namedFormat(xmlFormat1(Hobby))
+    implicit val personFormat = xmlFormat2(Person)
+    val p = Person("Richard Feynman", List(Hobby("Bongo Drums"), Hobby("Hiking")))
+    val xml = p.toNode
+    val result = SerializationTestHelper.serializeDeserialize(xml)
+    assert(result === xml)
+  }
 }
