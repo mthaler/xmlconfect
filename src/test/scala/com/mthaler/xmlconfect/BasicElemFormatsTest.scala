@@ -165,4 +165,10 @@ class BasicElemFormatsTest extends FunSuite {
       f.read(Right(Attribute("value", Text("MONDAY"), Null)))
     }
   }
+
+  test("serializeDeserializeXML") {
+    val xml = 42.toNode("value")
+    val result = SerializationTestHelper.serializeDeserialize(xml)
+    assert(result === xml)
+  }
 }
