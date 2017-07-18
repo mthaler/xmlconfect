@@ -268,4 +268,15 @@ class WrappedCollectionFormatsTest extends FunSuite {
     val result = SerializationTestHelper.serializeDeserialize(xml)
     assert(result === xml)
   }
+
+  test("serializeDeserializeXML2") {
+    import BasicAttrFormats._
+    import AdditionalFormats.namedFormat
+    implicit val f = namedFormat(ProductFormat.xmlFormat1(Count))
+    implicit val lf = WrappedCollectionFormats.listFormat[Count]()
+    val l = List(Count(5), Count(8), Count(42))
+    val xml = l.toNode("Test")
+    val result = SerializationTestHelper.serializeDeserialize(xml)
+    assert(xml === result)
+  }
 }

@@ -11,7 +11,13 @@ package object xmlconfect {
   def serializationError(msg: String) = throw new SerializationException(msg)
 
   def attribute(name: String, value: String) = Attribute(name, Text(value.toString), Null)
-  def elem(name: String, attributes: MetaData, children: Seq[Node]) = Elem(null, name, attributes, TopScope, true, children: _*)
+  def elem(name: String, attributes: MetaData, children: Seq[Node]) = children match {
+    case elem: Elem => Elem(null, name, attributes, TopScope, true, children: _*)
+    case node: Node => Elem(null, name, attributes, TopScope, true, children: _*)
+    case x =>
+      val c = children.toArray
+      Elem(null, name, attributes, TopScope, true, c: _*)
+  }
 
   def xmlReader[T](implicit reader: XmlReader[T]) = reader
   def xmlWriter[T](implicit writer: XmlWriter[T]) = writer
