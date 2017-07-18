@@ -145,4 +145,24 @@ class ProductFormatTest extends FunSuite {
       metaData(attributesList)
     }
   }
+
+  test("serializeDeserializeXML") {
+    import BasicAttrFormats._
+    import AdditionalFormats.namedFormat
+    implicit val f = namedFormat(xmlFormat1(Product1))
+    val p = Product1("test")
+    val xml = p.toNode
+    val result = SerializationTestHelper.serializeDeserialize(xml)
+    assert(result === xml)
+    implicit val f2 = xmlFormat2(Product2)
+    val p2 = Product2("test", 42)
+    val xml2 = p2.toNode
+    val result2 = SerializationTestHelper.serializeDeserialize(xml2)
+    assert(result2 === xml2)
+    implicit val f3 = xmlFormat1(Product1WithProduct1)
+    val p3 = Product1WithProduct1(Product1("test"))
+    val xml3 = p3.toNode
+    val result3 = SerializationTestHelper.serializeDeserialize(xml3)
+    assert(result3 === xml3)
+  }
 }
