@@ -4,6 +4,7 @@ import scala.annotation.tailrec
 import scala.reflect.{ ClassTag, classTag }
 import scala.util.control.NonFatal
 import scala.xml.{ MetaData, Node, Null }
+import scala.collection.Seq
 import scala.language.postfixOps
 
 /**
