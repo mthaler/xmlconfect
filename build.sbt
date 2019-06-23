@@ -3,7 +3,7 @@ import ReleaseTransformations._
 lazy val xmlConfectSettings = Seq(
   organization := "com.mthaler",
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.11.8", "2.12.8"),
+  crossScalaVersions := Seq("2.11.8", "2.12.8", "2.13.0"),
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
