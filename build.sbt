@@ -3,7 +3,7 @@ import ReleaseTransformations._
 lazy val xmlConfectSettings = Seq(
   organization := "com.mthaler",
   scalaVersion := "2.11.8",
-  crossScalaVersions := Seq("2.11.8", "2.12.2"),
+  crossScalaVersions := Seq("2.11.8", "2.12.8"),
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-xml" % "1.2.0",
@@ -19,17 +19,12 @@ lazy val xmlConfectSettings = Seq(
 
   // release stuff
   // credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+  releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := Function.const(false),
-  publishTo <<= version { v =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("Snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("Releases" at nexus + "service/local/staging/deploy/maven2")
-  },
+  publishTo := sonatypePublishTo.value,
   pomExtra :=
     <scm>
       <url>git@github.com:mthaler/xmlconfect.git</url>
@@ -71,4 +66,4 @@ lazy val root = project.in(file("."))
 lazy val core = project.in(file("."))
   .settings(name := "xmlconfect")
   .settings(xmlConfectSettings: _*)
-  .settings(Boilerplate.settings: _*) // generate boilerplate
+  .enablePlugins(spray.boilerplate.BoilerplatePlugin) // generate boilerplate
