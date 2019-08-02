@@ -19,7 +19,7 @@ xmlconfect is available from the Maven Central repository. The latest release is
 If you use SBT you can include xmlconfect in your project with
 
 ```scala
-libraryDependencies += "com.mthaler" %% "xmlconfect" % "0.3.5"
+libraryDependencies += "com.mthaler" %% "xmlconfect" % "0.4.8"
 ```
 
 ## Usage
