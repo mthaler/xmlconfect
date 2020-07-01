@@ -1,10 +1,10 @@
 package com.mthaler.xmlconfect
 
-import org.scalatest.FunSuite
 import BasicTextFormats._
 import ProductFormatInstances._
+import org.scalatest.funsuite.AnyFunSuite
 
-class BasicTextFormatsTest extends FunSuite {
+class BasicTextFormatsTest extends AnyFunSuite {
 
   test("boolean") {
     case class Test(value: Boolean)

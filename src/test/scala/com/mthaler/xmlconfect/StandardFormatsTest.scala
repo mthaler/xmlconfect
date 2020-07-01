@@ -1,10 +1,9 @@
 package com.mthaler.xmlconfect
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
+import scala.xml.{Attribute, Null, Text}
 
-import scala.xml.{ Attribute, Null, Text }
-
-class StandardFormatsTest extends FunSuite {
+class StandardFormatsTest extends AnyFunSuite {
 
   test("intOption") {
     import BasicAttrFormats._

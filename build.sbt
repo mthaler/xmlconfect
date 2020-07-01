@@ -7,7 +7,8 @@ lazy val xmlConfectSettings = Seq(
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
-    "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+    "org.scalatest" %% "scalatest" % "3.2.0" % "test",
+    "org.scalatest" %% "scalatest-funsuite" % "3.2.0" % "test"
   ),
   scalacOptions ++= Seq(
     "-deprecation",

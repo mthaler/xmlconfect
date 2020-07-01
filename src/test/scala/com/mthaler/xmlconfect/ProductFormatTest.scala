@@ -1,10 +1,9 @@
 package com.mthaler.xmlconfect
 
-import org.scalatest.FunSuite
-
 import ProductFormat._
+import org.scalatest.funsuite.AnyFunSuite
 import scala.reflect.classTag
-import scala.xml.{ Null, Text, Attribute }
+import scala.xml.{Attribute, Null, Text}
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)
@@ -18,7 +17,7 @@ object ProductFormatTest {
 
 }
 
-class ProductFormatTest extends FunSuite {
+class ProductFormatTest extends AnyFunSuite {
 
   import ProductFormatTest._
 

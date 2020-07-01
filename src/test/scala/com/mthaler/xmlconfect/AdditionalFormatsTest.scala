@@ -1,7 +1,7 @@
 package com.mthaler.xmlconfect
 
-import org.scalatest.FunSuite
 import ProductFormat._
+import org.scalatest.funsuite.AnyFunSuite
 import scala.xml._
 
 object AdditionalFormatsTest {
@@ -12,7 +12,7 @@ object AdditionalFormatsTest {
   case class Institution(name: String)
 }
 
-class AdditionalFormatsTest extends FunSuite {
+class AdditionalFormatsTest extends AnyFunSuite {
 
   import AdditionalFormatsTest._
 

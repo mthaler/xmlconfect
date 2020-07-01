@@ -1,13 +1,13 @@
 package com.mthaler.xmlconfect
 
 import com.mthaler.xmlconfect.CollectionFormatsTest.Count
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 object CollectionFormatsTest {
   case class Count(count: Int)
 }
 
-class CollectionFormatsTest extends FunSuite {
+class CollectionFormatsTest extends AnyFunSuite {
 
   import CollectionFormatsTest._
 
@@ -212,7 +212,7 @@ class CollectionFormatsTest extends FunSuite {
   }
 }
 
-class WrappedCollectionFormatsTest extends FunSuite {
+class WrappedCollectionFormatsTest extends AnyFunSuite {
 
   test("countList") {
     import BasicAttrFormats._

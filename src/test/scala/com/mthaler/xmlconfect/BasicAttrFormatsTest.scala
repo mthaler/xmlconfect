@@ -1,10 +1,10 @@
 package com.mthaler.xmlconfect
 
 import BasicAttrFormats._
-import org.scalatest.FunSuite
-import scala.xml.{ Null, Text, Attribute }
+import org.scalatest.funsuite.AnyFunSuite
+import scala.xml.{Attribute, Null, Text}
 
-class BasicAttrFormatsTest extends FunSuite {
+class BasicAttrFormatsTest extends AnyFunSuite {
 
   test("boolean") {
     assertResult(true) {

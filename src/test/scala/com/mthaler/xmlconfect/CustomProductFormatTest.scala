@@ -2,10 +2,10 @@ package com.mthaler.xmlconfect
 
 import com.mthaler.xmlconfect.ProductFormat.xmlFormat2
 import com.mthaler.xmlconfect.ProductFormatTest.Product2
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import scala.reflect._
 
-class CustomProductFormatTest extends FunSuite {
+class CustomProductFormatTest extends AnyFunSuite {
 
   test("xmlFormat2Attributes") {
     implicit val f = xmlFormat2(Product2)(BasicAttrFormats.StringXmlAttrFormat, BasicAttrFormats.IntXmlAttrFormat, classTag[Product2])

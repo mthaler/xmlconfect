@@ -1,12 +1,12 @@
 package com.mthaler.xmlconfect
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 object ClassesTest {
   case class Person(name: String = "Albert Einstein", age: Int = 42)
 }
 
-class ClassesTest extends FunSuite {
+class ClassesTest extends AnyFunSuite {
 
   import ClassesTest._
 
