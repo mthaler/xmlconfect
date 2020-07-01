@@ -1,6 +1,6 @@
 package com.mthaler.xmlconfect
 
-import scala.xml.{Attribute, Null, Text}
+import scala.xml.{ Attribute, Null, Text }
 import BasicElemFormats._
 import org.scalatest.funsuite.AnyFunSuite
 

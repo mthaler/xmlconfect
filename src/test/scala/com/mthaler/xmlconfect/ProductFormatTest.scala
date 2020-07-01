@@ -3,7 +3,7 @@ package com.mthaler.xmlconfect
 import ProductFormat._
 import org.scalatest.funsuite.AnyFunSuite
 import scala.reflect.classTag
-import scala.xml.{Attribute, Null, Text}
+import scala.xml.{ Attribute, Null, Text }
 
 object ProductFormatTest {
   case class TestClass(field1: String, field2: Int, field3: Double)

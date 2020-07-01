@@ -2,7 +2,7 @@ package com.mthaler.xmlconfect
 
 import BasicAttrFormats._
 import org.scalatest.funsuite.AnyFunSuite
-import scala.xml.{Attribute, Null, Text}
+import scala.xml.{ Attribute, Null, Text }
 
 class BasicAttrFormatsTest extends AnyFunSuite {
 
