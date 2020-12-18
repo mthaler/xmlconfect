@@ -14,12 +14,12 @@ It sports the following features:
 
 ## Installation
 
-xmlconfect is available from the Maven Central repository. The latest release is 0.3.5 and is built against Scala 2.11.7.
+xmlconfect is available from the Maven Central repository. The latest release is 0.3.5 and is built against Scala 2.11, 2.12 and 2.13.
 
 If you use SBT you can include xmlconfect in your project with
 
 ```scala
-libraryDependencies += "com.mthaler" %% "xmlconfect" % "0.3.5"
+libraryDependencies += "com.mthaler" %% "xmlconfect" % "0.4.8"
 ```
 
 ## Usage
